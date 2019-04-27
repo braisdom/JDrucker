@@ -1,4 +1,4 @@
-package com.braisdom.jdrucker;
+package org.braisdom.jdrucker;
 
 public interface DatabaseSession {
 
