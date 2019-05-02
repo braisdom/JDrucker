@@ -1,0 +1,10 @@
+# Query all users
+sql query_all_users {
+    SELECT name,gender FROM users WHERE name = '${user.name}';
+}
+
+# Query all users
+sql query_all_users {
+    SELECT * FROM users
+        WHERE name = '${user.name}';
+}

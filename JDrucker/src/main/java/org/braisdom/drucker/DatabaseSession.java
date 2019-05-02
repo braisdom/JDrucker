@@ -1,5 +1,6 @@
-package org.braisdom.jdrucker;
+package org.braisdom.drucker;
 
+import javax.sql.DataSource;
 import java.io.Closeable;
 
 public interface DatabaseSession extends Closeable {
@@ -13,5 +14,7 @@ public interface DatabaseSession extends Closeable {
     public Object query(String sql);
 
     public int update(String sql);
+
+    public void open(DataSource dataSource);
 
 }

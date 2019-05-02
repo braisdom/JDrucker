@@ -1,8 +1,8 @@
-package org.braisdom.jdrucker;
+package org.braisdom.drucker;
 
 import java.util.List;
 
-public interface TableAccessor<T> {
+public interface TableBehavior<T> {
 
     public T findById(Integer id);
 
@@ -19,4 +19,5 @@ public interface TableAccessor<T> {
     public boolean exists(Integer id);
 
     public Integer count();
+
 }
