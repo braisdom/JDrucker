@@ -12,9 +12,9 @@ public class XSqlParserTest {
     public static void main(String[] args) throws IOException, TemplateException {
         Map<String, String> user = new HashMap<>();
         Map<String, Object> dataModel = new HashMap<>();
-        user.put("gender", "male");
+        user.put("gender", "男");
         dataModel.put("user", user);
 
-        XSqlParser.parse("/sql/Users.xsql", "query_all_users1", XSqlParserTest.class, dataModel);
+        System.out.println(XSqlParser.parse("/sql/Users.xsql", "query_all_users1", XSqlParserTest.class, dataModel));
     }
 }

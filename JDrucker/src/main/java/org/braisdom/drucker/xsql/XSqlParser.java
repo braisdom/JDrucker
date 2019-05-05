@@ -100,11 +100,18 @@ public final class XSqlParser {
                                      String sqlId,
                                      Class resourceClass,
                                      Map<String, Object> dataModel) throws IOException, TemplateException {
-        BufferedReader buffer = new BufferedReader(new InputStreamReader(resourceClass.getResourceAsStream(file)));
-        String xSqlFileContent = buffer.lines().collect(Collectors.joining(SQL_LINE_DELIMITER));
-        XSqlFile xSqlFile = XSQL_PARSER.from(TOKENIZER, IGNORED).parse(xSqlFileContent);
+        XSqlFile xSqlFile = xSqlFileMap.get(file);
+
+        if(xSqlFile == null) {
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(resourceClass.getResourceAsStream(file)));
+            String xSqlFileContent = buffer.lines().collect(Collectors.joining(SQL_LINE_DELIMITER));
+            xSqlFile = XSQL_PARSER.from(TOKENIZER, IGNORED).parse(xSqlFileContent);
+            xSqlFileMap.put(file, xSqlFile);
+        }
+
         String sql = xSqlFile.getSqlBlock(sqlId).sql;
         StringWriter out = new StringWriter();
+
         Template template = new Template(sqlId, sql, templateConfiguration);
         template.process(dataModel, out);
         return out.toString();

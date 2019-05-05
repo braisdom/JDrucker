@@ -1,6 +1,7 @@
 # Query all users
 sql query_all_users1 {
-    SELECT name FROM users WHERE gender = '${ user.gender }';
+    SELECT name FROM users
+        WHERE gender = '${ user.gender }';
 }
 
 # Query all users
