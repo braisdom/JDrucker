@@ -4,6 +4,6 @@ public @interface Table {
 
     String value();
 
-    boolean unique() default false;
+    boolean uniqued() default false;
 
 }

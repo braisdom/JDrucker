@@ -1,11 +1,9 @@
 package org.braisdom.drucker;
 
-import org.apache.commons.io.FileUtils;
 import org.jparsec.*;
 import org.jparsec.internal.util.Strings;
 import org.jparsec.pattern.Patterns;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -70,10 +68,6 @@ public class JparsecExample {
                 XSqlBlock::new);
 
         Parser xsqlParse = Parsers.sequence(sqlBlockParser.asOptional().many()).map(XSql::new);
-
-        String sqlContent = FileUtils.readFileToString(new File(JparsecExample.class.getResource("/Users.xsql").getFile()));
-
-        xsqlParse.from(TOKENIZER, IGNORED).parse(sqlContent, Parser.Mode.DEBUG);
     }
 
     private static class XSql {
