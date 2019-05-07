@@ -10,6 +10,5 @@ public interface SqlExecutor {
 
     int update(String sql);
 
-    RowConverter createRowConverter();
-
+    TableMetaData getTableMetaData();
 }

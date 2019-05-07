@@ -2,6 +2,7 @@ package org.braisdom.drucker;
 
 import org.braisdom.drucker.annotation.Table;
 import org.braisdom.drucker.database.*;
+import org.braisdom.drucker.xsql.XSqlContext;
 
 import javax.sql.DataSource;
 import java.lang.reflect.InvocationHandler;
@@ -21,6 +22,11 @@ public class JDrucker {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             Class<? extends TableBehavior> declaringClass = (Class<? extends TableBehavior>) method.getDeclaringClass();
+            XSqlContext xSqlContext = new XSqlContext();
+            if(TableBehavior.class.equals(declaringClass)) {
+
+            }
+
             TableDescriptor tableDescriptor = new TableDescriptor(declaringClass);
 
             return null;

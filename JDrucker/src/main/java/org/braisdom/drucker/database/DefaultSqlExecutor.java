@@ -27,7 +27,7 @@ public class DefaultSqlExecutor implements SqlExecutor {
     }
 
     @Override
-    public RowConverter createRowConverter() {
+    public TableMetaData getTableMetaData() {
         return null;
     }
 }

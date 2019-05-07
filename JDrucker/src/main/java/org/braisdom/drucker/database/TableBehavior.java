@@ -1,6 +1,7 @@
 package org.braisdom.drucker.database;
 
 import org.braisdom.drucker.annotation.Sql;
+import org.braisdom.drucker.annotation.SqlParam;
 import org.braisdom.drucker.annotation.Table;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 public interface TableBehavior<T> {
 
     @Sql("find_by_id")
-    public T findById(Integer id);
+    public T findById(@SqlParam("id") Integer id);
 
     @Sql("find_all")
     public List<T> findAll();

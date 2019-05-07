@@ -6,10 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface TableField {
-
-    String value() default "";
-
-    boolean onDuplicatedUpdated() default false;
+@Target(ElementType.PARAMETER)
+public @interface SqlParam {
+    String value();
 }
