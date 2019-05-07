@@ -15,6 +15,6 @@ public class XSqlParserTest {
         user.put("gender", "男");
         dataModel.put("user", user);
 
-        System.out.println(XSqlParser.parse("/sql/User.xsql", "query_all_users1", XSqlParserTest.class, dataModel));
+        System.out.println(XSqlParser.parse("/sql/user.xsql", "query_all_users1", XSqlParserTest.class, dataModel));
     }
 }

@@ -9,4 +9,7 @@ public interface SqlExecutor {
     List queryList(String sql);
 
     int update(String sql);
+
+    RowConverter createRowConverter();
+
 }

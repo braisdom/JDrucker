@@ -9,11 +9,11 @@ import java.lang.reflect.Method;
 public final class TableDescriptor {
 
     private final Table tableAnnotation;
-    private final Class tableClass;
 
-    public TableDescriptor(Class tableClass, Table tableAnnotation) {
-        this.tableClass = tableClass;
-        this.tableAnnotation = tableAnnotation;
+    public TableDescriptor(Class<? extends TableBehavior> tableClass) {
+        this.tableAnnotation = tableClass.getAnnotation(Table.class);
+        if(this.tableAnnotation == null)
+            throw new IllegalArgumentException("Class " + tableClass.getName() + " has no Table annotation.");
     }
 
     public String getTableName() {
@@ -34,9 +34,7 @@ public final class TableDescriptor {
         String rawSqlFileName = tableAnnotation.file();
         if(rawSqlFileName == null || rawSqlFileName.length() == 0) {
             Class modelClass = getModelClass();
-            if(modelClass.equals(RawModel.class))
-                return TableBehavior.SQL_FILE_NAME;
-            return WordUtil.tableize(modelClass.getSimpleName());
+            return "/sql/" + WordUtil.tableize(modelClass.getSimpleName());
         }
         return rawSqlFileName;
     }
