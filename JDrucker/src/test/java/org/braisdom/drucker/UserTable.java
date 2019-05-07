@@ -2,7 +2,7 @@ package org.braisdom.drucker;
 
 import org.braisdom.drucker.annotation.Table;
 
-@Table("users")
+@Table(name = "users", model = UserTable.User.class)
 public interface UserTable extends TableBehavior<UserTable.User> {
 
     public static class User {
@@ -43,6 +43,4 @@ public interface UserTable extends TableBehavior<UserTable.User> {
             this.occupation = occupation;
         }
     }
-
-
 }

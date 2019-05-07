@@ -4,19 +4,23 @@ import java.util.List;
 
 public interface TableBehavior<T> {
 
+    public static final String SQL_FILE_NAME = "/sql/table_behavior.xsql";
+
     public T findById(Integer id);
 
     public List<T> findAll();
 
-    public void deleteById(Integer id);
+    public Integer deleteById(Integer id);
 
-    public void deleteAll();
+    public Integer truncateTable();
 
-    public void updateById(Integer id, T object);
+    public Integer updateById(Integer id, T object);
+
+    public Integer update(T object);
 
     public T create(T object);
 
-    public boolean exists(Integer id);
+    public Boolean exists(Integer id);
 
     public Integer count();
 

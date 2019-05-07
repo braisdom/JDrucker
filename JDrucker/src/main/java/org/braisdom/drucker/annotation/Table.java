@@ -9,7 +9,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Table {
 
-    String value();
+    Class model();
+
+    String name() default "";
+
+    String file() default  "";
 
     boolean uniqued() default false;
 
