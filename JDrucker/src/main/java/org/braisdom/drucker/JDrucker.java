@@ -1,6 +1,9 @@
 package org.braisdom.drucker;
 
 import org.braisdom.drucker.annotation.Table;
+import org.braisdom.drucker.database.TableBehavior;
+import org.braisdom.drucker.database.TableBehaviorProxy;
+import org.braisdom.drucker.database.TableDescriptor;
 
 import javax.sql.DataSource;
 import java.lang.reflect.InvocationHandler;
@@ -11,12 +14,17 @@ public class JDrucker {
 
     private static class DefaultInvocationHandler implements InvocationHandler {
 
-        public DefaultInvocationHandler(JDruckerContext context) {
+        private final JDruckerContext context;
+        private final TableBehaviorProxy tableBehaviorProxy;
 
+        public DefaultInvocationHandler(JDruckerContext context) {
+            this.context = context;
+            this.tableBehaviorProxy = new TableBehaviorProxy(context.getDataSource(), context.getTableDescriptor());
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
             return null;
         }
     }

@@ -6,6 +6,6 @@ public class JDruckerTest {
 
     public static void main(String[] args) {
         UserTable userTable = JDrucker.getProxy(UserTable.class, null);
-        List<UserTable.User> users = userTable.findAll();
+        UserTable.User users = userTable.findById(1);
     }
 }

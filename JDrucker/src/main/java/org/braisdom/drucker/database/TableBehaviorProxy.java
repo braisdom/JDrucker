@@ -1,4 +1,4 @@
-package org.braisdom.drucker;
+package org.braisdom.drucker.database;
 
 import javax.sql.DataSource;
 import java.util.List;

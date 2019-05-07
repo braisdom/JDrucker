@@ -1,4 +1,4 @@
-package org.braisdom.drucker;
+package org.braisdom.drucker.database;
 
 import java.util.List;
 
