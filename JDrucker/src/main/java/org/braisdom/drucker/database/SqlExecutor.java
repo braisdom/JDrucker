@@ -1,5 +1,6 @@
 package org.braisdom.drucker.database;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface SqlExecutor {
@@ -10,5 +11,5 @@ public interface SqlExecutor {
 
     int update(String sql);
 
-    TableMetaData getTableMetaData();
+    TableMetaData getTableMetaData() throws SQLException;
 }

@@ -1,6 +1,8 @@
 package org.braisdom.drucker.database;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class DefaultSqlExecutor implements SqlExecutor {
@@ -27,7 +29,14 @@ public class DefaultSqlExecutor implements SqlExecutor {
     }
 
     @Override
-    public TableMetaData getTableMetaData() {
-        return null;
+    public TableMetaData getTableMetaData() throws SQLException {
+        Connection connection = dataSource.getConnection();
+        try {
+
+            return null;
+        } finally {
+            if (connection != null)
+                connection.close();
+        }
     }
 }
