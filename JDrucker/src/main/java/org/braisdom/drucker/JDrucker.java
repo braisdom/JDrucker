@@ -23,18 +23,17 @@ public class JDrucker {
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             Class<? extends TableBehavior> declaringClass = (Class<? extends TableBehavior>) method.getDeclaringClass();
             XSqlContext xSqlContext = new XSqlContext();
+
             if(TableBehavior.class.equals(declaringClass)) {
 
             }
 
             TableDescriptor tableDescriptor = new TableDescriptor(declaringClass);
-
             return null;
         }
     }
 
     public static <T extends TableBehavior> T getProxy(Class<T> tableBehaviorClass, DataSource dataSource) {
-        Table tableAnnotation = tableBehaviorClass.getAnnotation(Table.class);
         DefaultInvocationHandler invocationHandler = new DefaultInvocationHandler(new DefaultSqlExecutor(dataSource));
         Object object = Proxy.newProxyInstance(
                 tableBehaviorClass.getClassLoader(), new Class<?>[]{tableBehaviorClass}, invocationHandler);

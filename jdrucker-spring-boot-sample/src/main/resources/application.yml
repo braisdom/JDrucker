@@ -1,0 +1,19 @@
+server:
+  port: 9000
+  connection-timeout: 60000
+  max-http-header-size: 1024000
+spring:
+  application:
+    name: mybank-adapter
+  datasource:
+    dynamic:
+      primary: master
+      datasource:
+        master:
+          url: jdbc:mysql://192.168.10.50:3306/mybank_adapter_development?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai&useLegacyDatetimeCode=false&autoReconnect=true
+          username: root
+          password: '123456'
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          type: com.zaxxer.hikari.HikariDataSource
+  profiles:
+    active: development

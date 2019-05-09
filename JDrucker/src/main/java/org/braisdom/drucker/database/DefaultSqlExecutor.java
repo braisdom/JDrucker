@@ -14,29 +14,22 @@ public class DefaultSqlExecutor implements SqlExecutor {
     }
 
     @Override
-    public Object query(String sql) {
+    public Object query(String sql) throws SQLException {
         return null;
     }
 
     @Override
-    public List queryList(String sql) {
+    public List queryList(String sql) throws SQLException {
         return null;
     }
 
     @Override
-    public int update(String sql) {
+    public int update(String sql) throws SQLException {
         return 0;
     }
 
     @Override
-    public TableMetaData getTableMetaData() throws SQLException {
-        Connection connection = dataSource.getConnection();
-        try {
-
-            return null;
-        } finally {
-            if (connection != null)
-                connection.close();
-        }
+    public TableMetaData getTableMetaData(String tableName) throws SQLException {
+        return null;
     }
 }

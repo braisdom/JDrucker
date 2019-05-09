@@ -5,11 +5,11 @@ import java.util.List;
 
 public interface SqlExecutor {
 
-    Object query(String sql);
+    Object query(String sql) throws SQLException;
 
-    List queryList(String sql);
+    List queryList(String sql) throws SQLException;
 
-    int update(String sql);
+    int update(String sql) throws SQLException;
 
-    TableMetaData getTableMetaData() throws SQLException;
+    TableMetaData getTableMetaData(String tableName) throws SQLException;
 }

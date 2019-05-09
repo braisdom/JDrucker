@@ -6,8 +6,11 @@
 
     <groupId>com.github.braisdom</groupId>
     <artifactId>JDrucker</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
     <version>1.0.0</version>
+    <modules>
+        <module>jdrucker-spring-sample</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
