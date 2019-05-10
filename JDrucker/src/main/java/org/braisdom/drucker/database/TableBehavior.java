@@ -6,7 +6,7 @@ import org.braisdom.drucker.annotation.Table;
 
 import java.util.List;
 
-@Table(file = "/sql/table_behavior.xsql", model = RawModel.class)
+@Table(file = "/sql/table_behavior.xsql", model = RawBean.class)
 public interface TableBehavior<T> {
 
     @Sql("find_by_id")

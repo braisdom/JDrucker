@@ -1,12 +1,14 @@
 package org.braisdom.drucker.database;
 
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.SQLException;
+import java.util.List;
 
 public interface DatabaseSession {
 
-    public Statement executeQuery(String sql);
+    public RowAdapter executeQuery(String sql) throws SQLException;
 
-    public int executeUpdate(String sql);
+    public List<RowAdapter> executeQueryMany(String sql) throws SQLException;
+
+    public int executeUpdate(String sql) throws SQLException;
 
 }

@@ -11,5 +11,4 @@ public interface SqlExecutor {
 
     int update(String sql) throws SQLException;
 
-    TableMetaData getTableMetaData(String tableName) throws SQLException;
 }

@@ -26,7 +26,7 @@ public final class TableDescriptor {
     public Class getModelClass() {
         Class rawClass = tableAnnotation.model();
         if(rawClass == null)
-            return RawModel.class;
+            return RawBean.class;
         return rawClass;
     }
 
