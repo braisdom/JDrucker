@@ -7,11 +7,11 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface Table {
+public @interface TableBehavior {
 
-    Class model();
+    Class beanClass();
 
-    String name() default "";
+    String tableName() default "";
 
     String file() default  "";
 

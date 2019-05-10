@@ -1,7 +1,9 @@
 package org.braisdom.drucker;
 
-import org.braisdom.drucker.annotation.Table;
-import org.braisdom.drucker.database.*;
+import org.braisdom.drucker.database.DefaultSqlExecutor;
+import org.braisdom.drucker.database.SqlExecutor;
+import org.braisdom.drucker.database.TableBehavior;
+import org.braisdom.drucker.database.TableDescriptor;
 import org.braisdom.drucker.xsql.XSqlContext;
 
 import javax.sql.DataSource;

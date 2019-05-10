@@ -1,7 +1,6 @@
 package org.braisdom.drucker;
 
-import org.braisdom.drucker.annotation.Table;
-import org.braisdom.drucker.database.TableBehavior;
+import org.braisdom.drucker.annotation.TableBehavior;
 
 public interface UserTable extends TableBehavior {
 

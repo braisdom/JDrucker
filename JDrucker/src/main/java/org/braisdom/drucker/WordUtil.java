@@ -710,8 +710,8 @@ public class WordUtil {
     }
 
     /**
-     * Returns a database table name corresponding to the input model class
-     * name.
+     * Returns a database table tableName corresponding to the input beanClass class
+     * tableName.
      *
      * <pre>
      * Examples:
@@ -720,15 +720,15 @@ public class WordUtil {
      * </pre>
      *
      * @param modelClassName
-     * @return the table name of the java model class name
+     * @return the table tableName of the java beanClass class tableName
      */
     public static String tableize(String modelClassName) {
         return pluralize(underscore(modelClassName));
     }
 
     /**
-     * Returns a model class name corresponding to the input database
-     * table name.
+     * Returns a beanClass class tableName corresponding to the input database
+     * table tableName.
      *
      * <pre>
      * Examples:
@@ -736,8 +736,8 @@ public class WordUtil {
      *   classify("line_items") ==> "LineItem"
      * </pre>
      *
-     * @param tableName java class name of the model
-     * @return a java model class name
+     * @param tableName java class tableName of the beanClass
+     * @return a java beanClass class tableName
      */
     public static String classify(String tableName) {
         return camelize(singularize(tableName));

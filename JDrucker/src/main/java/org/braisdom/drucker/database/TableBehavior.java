@@ -2,11 +2,10 @@ package org.braisdom.drucker.database;
 
 import org.braisdom.drucker.annotation.Sql;
 import org.braisdom.drucker.annotation.SqlParam;
-import org.braisdom.drucker.annotation.Table;
 
 import java.util.List;
 
-@Table(file = "/sql/table_behavior.xsql", model = RawBean.class)
+@org.braisdom.drucker.annotation.TableBehavior(file = "/sql/table_behavior.xsql", beanClass = RawBean.class)
 public interface TableBehavior<T> {
 
     @Sql("find_by_id")
