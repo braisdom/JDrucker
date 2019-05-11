@@ -1,9 +1,10 @@
 package org.braisdom.drucker;
 
-import org.braisdom.drucker.annotation.TableBehavior;
+import org.braisdom.drucker.annotation.Table;
+import org.braisdom.drucker.database.AbstractTable;
 
-@TableBehavior(tableName = "/sql/user.xsql", beanClass = UserTable.User.class)
-public interface UserTable extends org.braisdom.drucker.database.TableBehavior {
+@Table(tableName = "/sql/user.xsql", entityClass = UserTable.User.class)
+public interface UserTable extends AbstractTable {
 
     public static class User {
         private String name;

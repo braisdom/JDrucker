@@ -1,8 +1,8 @@
 package org.braisdom.drucker;
 
+import org.braisdom.drucker.database.AbstractTable;
 import org.braisdom.drucker.database.DefaultSqlExecutor;
 import org.braisdom.drucker.database.SqlExecutor;
-import org.braisdom.drucker.database.TableBehavior;
 import org.braisdom.drucker.database.TableDescriptor;
 import org.braisdom.drucker.xsql.XSqlContext;
 
@@ -23,10 +23,10 @@ public class JDrucker {
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            Class<? extends TableBehavior> declaringClass = (Class<? extends TableBehavior>) method.getDeclaringClass();
+            Class<? extends AbstractTable> declaringClass = (Class<? extends AbstractTable>) method.getDeclaringClass();
             XSqlContext xSqlContext = new XSqlContext();
 
-            if(TableBehavior.class.equals(declaringClass)) {
+            if(AbstractTable.class.equals(declaringClass)) {
 
             }
 
@@ -35,7 +35,7 @@ public class JDrucker {
         }
     }
 
-    public static <T extends TableBehavior> T getProxy(Class<T> tableBehaviorClass, DataSource dataSource) {
+    public static <T extends AbstractTable> T getProxy(Class<T> tableBehaviorClass, DataSource dataSource) {
         DefaultInvocationHandler invocationHandler = new DefaultInvocationHandler(new DefaultSqlExecutor(dataSource));
         Object object = Proxy.newProxyInstance(
                 tableBehaviorClass.getClassLoader(), new Class<?>[]{tableBehaviorClass}, invocationHandler);

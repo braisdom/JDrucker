@@ -1,4 +1,4 @@
 package org.braisdom.drucker.database;
 
-public class RawBean {
+public class RawEntity {
 }

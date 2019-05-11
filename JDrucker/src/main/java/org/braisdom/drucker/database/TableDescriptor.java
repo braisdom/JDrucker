@@ -2,36 +2,36 @@ package org.braisdom.drucker.database;
 
 import org.braisdom.drucker.WordUtil;
 import org.braisdom.drucker.annotation.Sql;
-import org.braisdom.drucker.annotation.TableBehavior;
+import org.braisdom.drucker.annotation.Table;
 
 import java.lang.reflect.Method;
 
 public final class TableDescriptor {
 
-    private final org.braisdom.drucker.annotation.TableBehavior tableBehaviorAnnotation;
+    private final Table tableAnnotation;
 
-    public TableDescriptor(Class<? extends org.braisdom.drucker.database.TableBehavior> tableClass) {
-        this.tableBehaviorAnnotation = tableClass.getAnnotation(TableBehavior.class);
-        if(this.tableBehaviorAnnotation == null)
-            throw new IllegalArgumentException("Class " + tableClass.getName() + " has no TableBehavior annotation.");
+    public TableDescriptor(Class<? extends AbstractTable> tableClass) {
+        this.tableAnnotation = tableClass.getAnnotation(Table.class);
+        if(this.tableAnnotation == null)
+            throw new IllegalArgumentException("Class " + tableClass.getName() + " has no AbstractTable annotation.");
     }
 
     public String getTableName() {
-        String rawTableName = tableBehaviorAnnotation.tableName();
+        String rawTableName = tableAnnotation.tableName();
         if(rawTableName == null || rawTableName.length() == 0)
-            return WordUtil.tableize(tableBehaviorAnnotation.beanClass().getSimpleName());
+            return WordUtil.tableize(tableAnnotation.entityClass().getSimpleName());
         return rawTableName;
     }
 
     public Class getModelClass() {
-        Class rawClass = tableBehaviorAnnotation.beanClass();
+        Class rawClass = tableAnnotation.entityClass();
         if(rawClass == null)
-            return RawBean.class;
+            return RawEntity.class;
         return rawClass;
     }
 
     public String getSqlFileName() {
-        String rawSqlFileName = tableBehaviorAnnotation.file();
+        String rawSqlFileName = tableAnnotation.file();
         if(rawSqlFileName == null || rawSqlFileName.length() == 0) {
             Class modelClass = getModelClass();
             return "/sql/" + WordUtil.tableize(modelClass.getSimpleName());
@@ -41,12 +41,12 @@ public final class TableDescriptor {
 
     public String getSqlId(Method method) {
         Sql sql = method.getAnnotation(Sql.class);
-        if(sql == null || sql.value().length() == 0)
+        if(sql == null || sql.id().length() == 0)
             return WordUtil.tableize(method.getName());
-        return sql.value();
+        return sql.id();
     }
 
     public boolean isUniqued() {
-        return tableBehaviorAnnotation.uniqued();
+        return tableAnnotation.uniqued();
     }
 }

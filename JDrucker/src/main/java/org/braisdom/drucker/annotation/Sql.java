@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Sql {
 
-    String value();
+    String id() default "";
 
+    String simpleSql() default "";
 }

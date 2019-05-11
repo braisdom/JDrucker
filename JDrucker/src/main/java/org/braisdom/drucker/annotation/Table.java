@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface TableBehavior {
+public @interface Table {
 
-    Class beanClass();
+    Class entityClass();
 
     String tableName() default "";
 

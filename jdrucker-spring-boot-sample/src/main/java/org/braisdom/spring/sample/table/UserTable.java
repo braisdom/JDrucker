@@ -1,9 +1,10 @@
 package org.braisdom.spring.sample.table;
 
-import org.braisdom.drucker.annotation.TableBehavior;
+import org.braisdom.drucker.annotation.Table;
+import org.braisdom.drucker.database.AbstractTable;
 
-@TableBehavior(beanClass = UserTable.User.class)
-public interface UserTable extends org.braisdom.drucker.database.TableBehavior {
+@Table(entityClass = UserTable.User.class)
+public interface UserTable extends AbstractTable {
 
     class User {
         private String name;
