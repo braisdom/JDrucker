@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Documented
 @Import(XSqlDiscovererRegistrar.class)
-public @interface TableBehaviorDiscoverer {
+public @interface TableDiscoverer {
 
     String[] classpath();
 

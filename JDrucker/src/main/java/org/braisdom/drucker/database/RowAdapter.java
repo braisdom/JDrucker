@@ -2,8 +2,8 @@ package org.braisdom.drucker.database;
 
 public interface RowAdapter {
 
-    public Object getBean();
+    public Object getEntity();
 
-    public Object getRawBean();
+    public RowAdapter getRawEntity();
 
 }

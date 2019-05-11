@@ -4,7 +4,7 @@ spring:
   application:
     name: jdrucker-spring-boot-sample
   datasource:
-    url: jdbc:sqlite:./sample.db
+    url: jdbc:sqlite:sample.db
     username: root
     password: root
     driver-class-name: org.sqlite.JDBC

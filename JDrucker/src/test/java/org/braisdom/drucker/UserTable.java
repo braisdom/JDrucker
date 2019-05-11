@@ -4,7 +4,7 @@ import org.braisdom.drucker.annotation.Table;
 import org.braisdom.drucker.database.AbstractTable;
 
 @Table(tableName = "/sql/user.xsql", entityClass = UserTable.User.class)
-public interface UserTable extends AbstractTable {
+public interface UserTable<T> extends AbstractTable<T> {
 
     public static class User {
         private String name;
