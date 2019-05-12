@@ -10,6 +10,5 @@ import java.lang.annotation.Target;
 public @interface Sql {
 
     String id() default "";
-
-    String simpleSql() default "";
+    
 }

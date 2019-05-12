@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableTransactionManagement
-@TableDiscoverer(classpath = {"org.braisdom.spring.sample.table"})
+@TableDiscoverer(classpath = {"org.braisdom.spring.sample.database"})
 public class SampleApplication {
 
     public static final void main(String[] args) {

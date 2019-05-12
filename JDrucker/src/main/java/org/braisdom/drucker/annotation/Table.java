@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Table {
 
-    Class entityClass();
+    Class entityBeanClass();
 
     String tableName() default "";
 

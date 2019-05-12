@@ -19,12 +19,12 @@ public final class TableDescriptor {
     public String getTableName() {
         String rawTableName = tableAnnotation.tableName();
         if(rawTableName == null || rawTableName.length() == 0)
-            return WordUtil.tableize(tableAnnotation.entityClass().getSimpleName());
+            return WordUtil.tableize(tableAnnotation.entityBeanClass().getSimpleName());
         return rawTableName;
     }
 
     public Class getModelClass() {
-        Class rawClass = tableAnnotation.entityClass();
+        Class rawClass = tableAnnotation.entityBeanClass();
         if(rawClass == null)
             return RawEntity.class;
         return rawClass;

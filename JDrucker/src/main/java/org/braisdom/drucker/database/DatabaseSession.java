@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface DatabaseSession {
 
-    public RowAdapter executeQuery(String sql) throws SQLException;
+    public RowEntityAdapter executeQuery(String sql) throws SQLException;
 
-    public List<RowAdapter> executeQueryMany(String sql) throws SQLException;
+    public List<RowEntityAdapter> executeQueryMany(String sql) throws SQLException;
 
     public int executeUpdate(String sql) throws SQLException;
 

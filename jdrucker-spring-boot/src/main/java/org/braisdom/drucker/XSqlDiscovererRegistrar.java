@@ -1,11 +1,7 @@
 package org.braisdom.drucker;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.config.RuntimeBeanNameReference;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -25,19 +21,13 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
-public class XSqlDiscovererRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware, BeanFactoryAware {
+public class XSqlDiscovererRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
 
     private ResourceLoader resourceLoader;
-    private BeanFactory beanFactory;
 
     @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
-    }
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
     }
 
     @Override
@@ -50,10 +40,12 @@ public class XSqlDiscovererRegistrar implements ImportBeanDefinitionRegistrar, R
                 Set<BeanDefinitionHolder> beanDefinitionHolders = super.doScan(basePackages);
                 for (BeanDefinitionHolder beanDefinitionHolder : beanDefinitionHolders) {
                     GenericBeanDefinition definition = (GenericBeanDefinition) beanDefinitionHolder.getBeanDefinition();
-                    definition.getConstructorArgumentValues().addGenericArgumentValue(definition.getBeanClassName());
-                    definition.getConstructorArgumentValues().addGenericArgumentValue(new RuntimeBeanReference("databaseSession"));
+                    definition.getConstructorArgumentValues()
+                            .addGenericArgumentValue(definition.getBeanClassName());
+                    definition.getConstructorArgumentValues()
+                            .addGenericArgumentValue(new RuntimeBeanReference("databaseSession"));
                     definition.setBeanClass(TableFactoryBean.class);
-                    definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
+                    definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE | AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR);
                 }
                 return beanDefinitionHolders;
             }
@@ -68,6 +60,7 @@ public class XSqlDiscovererRegistrar implements ImportBeanDefinitionRegistrar, R
         if (resourceLoader != null) {
             scanner.setResourceLoader(resourceLoader);
         }
+
         scanner.addIncludeFilter(new AnnotationTypeFilter(Annotation.class));
         scanner.addIncludeFilter(new TypeFilter() {
             @Override

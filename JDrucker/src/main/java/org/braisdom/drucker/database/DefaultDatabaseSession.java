@@ -1,6 +1,5 @@
 package org.braisdom.drucker.database;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -8,22 +7,22 @@ import java.util.List;
 
 public class DefaultDatabaseSession implements DatabaseSession {
 
-    private final DataSource dataSource;
+    private final DatabaseConnectionFactory databaseConnectionFactory;
 
-    public DefaultDatabaseSession(DataSource dataSource) {
-        this.dataSource = dataSource;
+    public DefaultDatabaseSession(DatabaseConnectionFactory databaseConnectionFactory) {
+        this.databaseConnectionFactory = databaseConnectionFactory;
     }
 
     @Override
-    public RowAdapter executeQuery(String sql) throws SQLException {
-        Connection connection = dataSource.getConnection();
+    public RowEntityAdapter executeQuery(String sql) throws SQLException {
+        Connection connection = databaseConnectionFactory.getConnection();
         Statement statement = connection.createStatement();
-        statement.executeQuery(sql);
+        statement.executeUpdate(sql);
         return null;
     }
 
     @Override
-    public List<RowAdapter> executeQueryMany(String sql) throws SQLException {
+    public List<RowEntityAdapter> executeQueryMany(String sql) throws SQLException {
         return null;
     }
 
