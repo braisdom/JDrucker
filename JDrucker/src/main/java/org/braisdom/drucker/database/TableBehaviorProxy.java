@@ -20,7 +20,12 @@ public class TableBehaviorProxy implements InvocationHandler {
         Class<? extends AbstractTable> declaringClass = (Class<? extends AbstractTable>) method.getDeclaringClass();
         Sql sql = method.getAnnotation(Sql.class);
         SqlExecuteContext sqlExecuteContext = new SqlExecuteContextImpl(sql, method.getParameters(), args);
-        return databaseSession.executeQuery(declaringClass, sql);
+        if(SqlType.QUERY_ONE.equals(sql.sqlType()))
+            return databaseSession.executeQuery(declaringClass, sql, sqlExecuteContext);
+        else if(SqlType.QUERY_MANY.equals(sql.sqlType()))
+            return databaseSession.executeQueryMany(declaringClass, sql, sqlExecuteContext);
+        else
+            return databaseSession.executeUpdate(declaringClass, sql);
     }
 
     protected class SqlExecuteContextImpl implements SqlExecuteContext {

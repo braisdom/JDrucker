@@ -1,6 +1,7 @@
 package org.braisdom.drucker.database;
 
 import org.braisdom.drucker.annotation.Sql;
+import org.braisdom.drucker.annotation.Table;
 import org.braisdom.drucker.xsql.XSqlContext;
 
 import java.sql.*;
@@ -25,7 +26,9 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
-    public EntityAdapter executeQuery(Class<? extends AbstractTable> tableClass, Sql sql) throws SQLException {
+    public EntityAdapter executeQuery(Class<? extends AbstractTable> tableClass,
+                                      Sql sql, SqlExecuteContext sqlExecuteContext) throws SQLException {
+        Table tableAnnotation = tableClass.getAnnotation(Table.class);
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
         Statement statement = null;
@@ -41,8 +44,21 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
-    public List<EntityAdapter> executeQueryMany(Class<? extends AbstractTable> tableClass, Sql sql) throws SQLException {
-        return null;
+    public List<EntityAdapter> executeQueryMany(Class<? extends AbstractTable> tableClass,
+                                                Sql sql, SqlExecuteContext sqlExecuteContext) throws SQLException {
+        Connection connection = databaseConnectionFactory.getConnection();
+        ResultSet resultSet = null;
+        Statement statement = null;
+        try {
+            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            statement = connection.createStatement();
+//            resultSet = statement.executeQuery(sql);
+            TableMetaData tableMetaData = getTableMetaData(tableClass, databaseMetaData, resultSet.getMetaData());
+            rowAdapterFactory.createRowAdapter(tableMetaData, resultSet);
+            return null;
+        } finally {
+            close(statement, resultSet, connection);
+        }
     }
 
     @Override

@@ -7,9 +7,11 @@ import java.util.List;
 
 public interface DatabaseSession {
 
-    public EntityAdapter executeQuery(Class<? extends AbstractTable> tableClass, Sql sql) throws SQLException;
+    public EntityAdapter executeQuery(Class<? extends AbstractTable> tableClass,
+                                      Sql sql, SqlExecuteContext sqlExecuteContext) throws SQLException;
 
-    public List<EntityAdapter> executeQueryMany(Class<? extends AbstractTable> tableClass, Sql sql) throws SQLException;
+    public List<EntityAdapter> executeQueryMany(Class<? extends AbstractTable> tableClass,
+                                                Sql sql, SqlExecuteContext sqlExecuteContext) throws SQLException;
 
     public int executeUpdate(Class<? extends AbstractTable> tableClass, Sql sql) throws SQLException;
 
