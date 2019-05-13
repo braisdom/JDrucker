@@ -19,7 +19,6 @@ public class SampleController {
         return "Hello";
     }
 
-    @Transactional(rollbackFor = Exception.class)
     @RequestMapping("/say_hello")
     public String sayHello1() {
         userTable.findAll();

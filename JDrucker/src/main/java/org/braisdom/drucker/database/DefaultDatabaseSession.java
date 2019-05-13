@@ -10,12 +10,14 @@ public class DefaultDatabaseSession implements DatabaseSession {
     private final DatabaseConnectionFactory databaseConnectionFactory;
     private final TableMetaDataFactory tableMetaDataFactory;
     private final Map<String, TableMetaData> tableMetaDataMap;
+    private final RowEntityAdapterFactory rowEntityAdapterFactory;
 
     public DefaultDatabaseSession(DatabaseConnectionFactory databaseConnectionFactory,
                                   TableMetaDataFactory tableMetaDataFactory,
                                   RowEntityAdapterFactory rowEntityAdapterFactory) {
         this.databaseConnectionFactory = databaseConnectionFactory;
         this.tableMetaDataFactory = tableMetaDataFactory;
+        this.rowEntityAdapterFactory = rowEntityAdapterFactory;
         this.tableMetaDataMap = new HashMap<>();
     }
 
@@ -28,12 +30,11 @@ public class DefaultDatabaseSession implements DatabaseSession {
             Statement statement = connection.createStatement();
             resultSet = statement.executeQuery(sql);
             TableMetaData tableMetaData = getTableMetaData(tableClass, databaseMetaData, resultSet.getMetaData());
+            RowEntityAdapter rowEntityAdapter = rowEntityAdapterFactory.createRowEntityAdapter(tableMetaData, resultSet);
             return null;
         } finally {
             if (resultSet != null)
                 resultSet.close();
-            if (connection != null)
-                connection.close();
         }
     }
 
@@ -49,7 +50,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     protected TableMetaData getTableMetaData(Class<? extends AbstractTable> tableClass, DatabaseMetaData databaseMetaData,
                                              ResultSetMetaData resultSetMetaData) throws SQLException {
-        if (tableMetaDataMap.containsKey(tableClass.getName())) {
+        if (!tableMetaDataMap.containsKey(tableClass.getName())) {
             TableMetaData tableMetaData = tableMetaDataFactory.createTableMetaData(tableClass, databaseMetaData,
                     resultSetMetaData);
             tableMetaDataMap.put(tableClass.getName(), tableMetaData);
