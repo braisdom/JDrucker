@@ -4,11 +4,11 @@ import java.sql.ResultSet;
 
 public class DefaultRowEntityAdapter implements RowEntityAdapter {
 
-    private final Class entityBeanClass;
+    private final TableMetaData tableMetaData;
     private final ResultSet resultSet;
 
-    public DefaultRowEntityAdapter(Class entityBeanClass, ResultSet resultSet) {
-        this.entityBeanClass = entityBeanClass;
+    public DefaultRowEntityAdapter(TableMetaData tableMetaData, ResultSet resultSet) {
+        this.tableMetaData = tableMetaData;
         this.resultSet = resultSet;
     }
 

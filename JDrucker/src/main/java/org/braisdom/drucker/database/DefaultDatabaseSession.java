@@ -12,7 +12,8 @@ public class DefaultDatabaseSession implements DatabaseSession {
     private final Map<String, TableMetaData> tableMetaDataMap;
 
     public DefaultDatabaseSession(DatabaseConnectionFactory databaseConnectionFactory,
-                                  TableMetaDataFactory tableMetaDataFactory) {
+                                  TableMetaDataFactory tableMetaDataFactory,
+                                  RowEntityAdapterFactory rowEntityAdapterFactory) {
         this.databaseConnectionFactory = databaseConnectionFactory;
         this.tableMetaDataFactory = tableMetaDataFactory;
         this.tableMetaDataMap = new HashMap<>();

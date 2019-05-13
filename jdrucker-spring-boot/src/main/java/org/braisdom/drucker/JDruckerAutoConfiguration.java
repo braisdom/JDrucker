@@ -22,7 +22,7 @@ public class JDruckerAutoConfiguration {
     @ConditionalOnMissingBean
     public DatabaseSession databaseSession(DataSource dataSource) {
         return new DefaultDatabaseSession(new DefaultDatabaseConnectionFactory(dataSource),
-                new DefaultTableMetaDataFactory());
+                new DefaultTableMetaDataFactory(), new DefaultRowEntityAdapterFactory());
     }
 
     private class DefaultDatabaseConnectionFactory implements DatabaseConnectionFactory {
