@@ -3,6 +3,7 @@ package org.braisdom.drucker.database;
 import org.braisdom.drucker.WordUtil;
 import org.braisdom.drucker.annotation.Table;
 
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,22 +14,27 @@ import java.util.Map;
 public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
 
     @Override
-    public TableMetaData getTableDescriptor(Class<? extends AbstractTable> tableClass,
-                                            ResultSetMetaData resultSetMetaData) throws SQLException {
-        return new TableMetaDataImpl(tableClass, resultSetMetaData);
+    public TableMetaData createTableMetaData(Class<? extends AbstractTable> tableClass,
+                                             DatabaseMetaData databaseMetaData,
+                                             ResultSetMetaData resultSetMetaData) throws SQLException {
+        return new TableMetaDataImpl(tableClass, databaseMetaData, resultSetMetaData);
     }
 
     protected class TableMetaDataImpl implements TableMetaData {
 
-        private final Table tableAnnotation;
-        private final Class<? extends AbstractTable> tableClass;
-        private final ResultSetMetaData resultSetMetaData;
         private final Map<String, ColumnMetaData> columnMetaDataMap;
         private final String[] columnNames;
 
+        private final Table tableAnnotation;
+        private final Class<? extends AbstractTable> tableClass;
+        private final DatabaseMetaData databaseMetaData;
+        private final ResultSetMetaData resultSetMetaData;
+
         public TableMetaDataImpl(Class<? extends AbstractTable> tableClass,
+                                 DatabaseMetaData databaseMetaData,
                                  ResultSetMetaData resultSetMetaData) throws SQLException {
             this.tableClass = tableClass;
+            this.databaseMetaData = databaseMetaData;
             this.resultSetMetaData = resultSetMetaData;
             this.tableAnnotation = tableClass.getAnnotation(Table.class);
             this.columnMetaDataMap = new HashMap<>();
@@ -36,6 +42,11 @@ public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
 
             if (this.tableAnnotation == null)
                 throw new IllegalArgumentException("Class " + tableClass.getName() + " has no Table annotation.");
+        }
+
+        @Override
+        public String getDatabaseProductName() throws SQLException {
+            return databaseMetaData.getDatabaseProductName();
         }
 
         @Override
@@ -65,11 +76,11 @@ public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
             int columnCount = resultSetMetaData.getColumnCount();
             List<String> columnMetaDatas = new ArrayList<>();
 
-            for (int i = 1; i <= columnCount; i++) {
-                String columnName = resultSetMetaData.getColumnName(i);
-                ColumnMetaData columnMetaData = new ColumnMetaData(resultSetMetaData.getColumnName(i),
-                        resultSetMetaData.getColumnType(i), i, resultSetMetaData.getScale(i),
-                        resultSetMetaData.isNullable(i));
+            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                String columnName = resultSetMetaData.getColumnName(columnIndex);
+                ColumnMetaData columnMetaData = new ColumnMetaData(resultSetMetaData.getColumnName(columnIndex), columnIndex,
+                        resultSetMetaData.getColumnType(columnIndex), resultSetMetaData.getScale(columnIndex),
+                        resultSetMetaData.isNullable(columnIndex));
                 columnMetaDatas.add(columnName);
                 columnMetaDataMap.put(columnName, columnMetaData);
             }
