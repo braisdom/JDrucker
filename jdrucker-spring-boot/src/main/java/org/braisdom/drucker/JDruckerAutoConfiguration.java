@@ -10,22 +10,24 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.Executor;
 
 @Configuration
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
 public class JDruckerAutoConfiguration {
 
     @Bean
-    @ConditionalOnBean(DataSource.class)
     @ConditionalOnMissingBean
+    @ConditionalOnBean(DataSource.class)
     public DatabaseSession databaseSession(DataSource dataSource) {
         return new DefaultDatabaseSession(new DefaultDatabaseConnectionFactory(dataSource),
                 new DefaultTableMetaDataFactory(), new DefaultRowEntityAdapterFactory());
     }
 
-    private class DefaultDatabaseConnectionFactory implements DatabaseConnectionFactory {
+    protected static class DefaultDatabaseConnectionFactory implements DatabaseConnectionFactory {
 
         private final DataSource dataSource;
 
@@ -35,7 +37,7 @@ public class JDruckerAutoConfiguration {
 
         @Override
         public Connection getConnection() throws SQLException {
-            return DataSourceUtils.getConnection(dataSource);
+            return new ConnectionWrapper(dataSource, DataSourceUtils.getConnection(dataSource));
         }
     }
 

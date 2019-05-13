@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/")
 @RestController
+@Transactional
 public class SampleController {
 
     @Autowired

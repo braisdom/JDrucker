@@ -35,6 +35,8 @@ public class DefaultDatabaseSession implements DatabaseSession {
         } finally {
             if (resultSet != null)
                 resultSet.close();
+            if(connection != null)
+                connection.close();
         }
     }
 
