@@ -5,5 +5,5 @@ import java.sql.SQLException;
 
 public interface RowAdapterFactory {
 
-    RowAdapter createRowAdapter(TableMetaData tableMetaData, ResultSet resultSet) throws SQLException;
+    EntityAdapter createRowAdapter(TableMetaData tableMetaData, ResultSet resultSet) throws SQLException;
 }

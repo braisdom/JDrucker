@@ -22,7 +22,7 @@ public class SampleController {
 
     @RequestMapping("/say_hello")
     public String sayHello1() {
-        userTable.findAll();
+        userTable.findById(10);
         return "Hello";
     }
 }

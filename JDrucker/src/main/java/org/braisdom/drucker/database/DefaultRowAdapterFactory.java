@@ -6,8 +6,8 @@ import java.sql.SQLException;
 public class DefaultRowAdapterFactory implements RowAdapterFactory {
 
     @Override
-    public RowAdapter createRowAdapter(TableMetaData tableMetaData, ResultSet resultSet) throws SQLException {
-        return new DefaultRowAdapter(tableMetaData, resultSet);
+    public EntityAdapter createRowAdapter(TableMetaData tableMetaData, ResultSet resultSet) throws SQLException {
+        return new DefaultEntityAdapter(tableMetaData, resultSet);
     }
 
 }

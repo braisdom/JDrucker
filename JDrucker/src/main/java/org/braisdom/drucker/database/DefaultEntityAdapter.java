@@ -8,13 +8,13 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultRowAdapter implements RowAdapter {
+public class DefaultEntityAdapter implements EntityAdapter {
 
     private final TableMetaData tableMetaData;
     private final ResultSet resultSet;
     private final Map<String, Object> columnValueHolder;
 
-    public DefaultRowAdapter(TableMetaData tableMetaData, ResultSet resultSet) throws SQLException {
+    public DefaultEntityAdapter(TableMetaData tableMetaData, ResultSet resultSet) throws SQLException {
         this.tableMetaData = tableMetaData;
         this.resultSet = resultSet;
         this.columnValueHolder = new HashMap<>();
@@ -28,7 +28,7 @@ public class DefaultRowAdapter implements RowAdapter {
     }
 
     @Override
-    public RowAdapter getRawEntity() {
+    public RawEntity getRawEntity() {
         return null;
     }
 

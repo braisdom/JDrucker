@@ -15,9 +15,9 @@ public interface AbstractTable<T> {
     @Sql(id = "find_all")
     public List<T> findAll();
 
-    public Integer deleteById(Integer id);
+    public Integer deleteById(@SqlParam("id") Integer id);
 
-    public Integer updateById(Integer id, T object);
+    public Integer updateById(@SqlParam("id") Integer id, T object);
 
     public Integer update(T object);
 

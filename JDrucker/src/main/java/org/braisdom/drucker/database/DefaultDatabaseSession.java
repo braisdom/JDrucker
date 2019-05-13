@@ -1,5 +1,8 @@
 package org.braisdom.drucker.database;
 
+import org.braisdom.drucker.annotation.Sql;
+import org.braisdom.drucker.xsql.XSqlContext;
+
 import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
@@ -22,14 +25,14 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
-    public RowAdapter executeQuery(Class<? extends AbstractTable> tableClass, String sql) throws SQLException {
+    public EntityAdapter executeQuery(Class<? extends AbstractTable> tableClass, Sql sql) throws SQLException {
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
         Statement statement = null;
         try {
             DatabaseMetaData databaseMetaData = connection.getMetaData();
             statement = connection.createStatement();
-            resultSet = statement.executeQuery(sql);
+//            resultSet = statement.executeQuery(sql);
             TableMetaData tableMetaData = getTableMetaData(tableClass, databaseMetaData, resultSet.getMetaData());
             return rowAdapterFactory.createRowAdapter(tableMetaData, resultSet);
         } finally {
@@ -38,12 +41,12 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
-    public List<RowAdapter> executeQueryMany(Class<? extends AbstractTable> tableClass, String sql) throws SQLException {
+    public List<EntityAdapter> executeQueryMany(Class<? extends AbstractTable> tableClass, Sql sql) throws SQLException {
         return null;
     }
 
     @Override
-    public int executeUpdate(Class<? extends AbstractTable> tableClass, String sql) throws SQLException {
+    public int executeUpdate(Class<? extends AbstractTable> tableClass, Sql sql) throws SQLException {
         return 0;
     }
 
@@ -55,6 +58,10 @@ public class DefaultDatabaseSession implements DatabaseSession {
             tableMetaDataMap.put(tableClass.getName(), tableMetaData);
         }
         return tableMetaDataMap.get(tableClass.getName());
+    }
+
+    private XSqlContext createXSqlContext() {
+        return null;
     }
 
     private void close(Statement statement, ResultSet resultSet, Connection connection) throws SQLException {
