@@ -11,9 +11,6 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.Executor;
 
 @Configuration
 @AutoConfigureAfter(DataSourceAutoConfiguration.class)
@@ -24,7 +21,7 @@ public class JDruckerAutoConfiguration {
     @ConditionalOnBean(DataSource.class)
     public DatabaseSession databaseSession(DataSource dataSource) {
         return new DefaultDatabaseSession(new DefaultDatabaseConnectionFactory(dataSource),
-                new DefaultTableMetaDataFactory(), new DefaultRowEntityAdapterFactory());
+                new DefaultTableMetaDataFactory(), new DefaultRowAdapterFactory());
     }
 
     protected static class DefaultDatabaseConnectionFactory implements DatabaseConnectionFactory {

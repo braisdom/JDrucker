@@ -8,13 +8,13 @@ import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultRowEntityAdapter implements RowEntityAdapter {
+public class DefaultRowAdapter implements RowAdapter {
 
     private final TableMetaData tableMetaData;
     private final ResultSet resultSet;
     private final Map<String, Object> columnValueHolder;
 
-    public DefaultRowEntityAdapter(TableMetaData tableMetaData, ResultSet resultSet) throws SQLException {
+    public DefaultRowAdapter(TableMetaData tableMetaData, ResultSet resultSet) throws SQLException {
         this.tableMetaData = tableMetaData;
         this.resultSet = resultSet;
         this.columnValueHolder = new HashMap<>();
@@ -28,7 +28,7 @@ public class DefaultRowEntityAdapter implements RowEntityAdapter {
     }
 
     @Override
-    public RowEntityAdapter getRawEntity() {
+    public RowAdapter getRawEntity() {
         return null;
     }
 
@@ -80,7 +80,7 @@ public class DefaultRowEntityAdapter implements RowEntityAdapter {
                 columnValueHolder.put(columnName, resultSet.getTimestamp(columnIndex));
                 break;
             default:
-                throw new IllegalStateException("Invalid SQL type: " + columnMetaData.getType());
+                throw new IllegalSQLTypeException("Invalid SQL type: " + columnMetaData.getType());
         }
     }
 }
