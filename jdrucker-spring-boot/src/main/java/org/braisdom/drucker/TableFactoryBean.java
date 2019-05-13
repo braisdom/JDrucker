@@ -1,6 +1,7 @@
 package org.braisdom.drucker;
 
 import org.braisdom.drucker.database.DatabaseSession;
+import org.braisdom.drucker.database.TableMetaDataFactory;
 import org.springframework.beans.factory.FactoryBean;
 
 public class TableFactoryBean implements FactoryBean {

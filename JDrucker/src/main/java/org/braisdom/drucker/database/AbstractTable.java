@@ -17,8 +17,6 @@ public interface AbstractTable<T> {
 
     public Integer deleteById(Integer id);
 
-    public Integer truncateTable();
-
     public Integer updateById(Integer id, T object);
 
     public Integer update(T object);

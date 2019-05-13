@@ -1,8 +1,6 @@
 package org.braisdom.drucker;
 
-import org.braisdom.drucker.database.DatabaseConnectionFactory;
-import org.braisdom.drucker.database.DatabaseSession;
-import org.braisdom.drucker.database.DefaultDatabaseSession;
+import org.braisdom.drucker.database.*;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -23,7 +21,8 @@ public class JDruckerAutoConfiguration {
     @ConditionalOnBean(DataSource.class)
     @ConditionalOnMissingBean
     public DatabaseSession databaseSession(DataSource dataSource) {
-        return new DefaultDatabaseSession(new DefaultDatabaseConnectionFactory(dataSource));
+        return new DefaultDatabaseSession(new DefaultDatabaseConnectionFactory(dataSource),
+                new DefaultTableMetaDataFactory());
     }
 
     private class DefaultDatabaseConnectionFactory implements DatabaseConnectionFactory {

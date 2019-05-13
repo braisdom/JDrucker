@@ -6,11 +6,11 @@ import org.braisdom.drucker.annotation.Table;
 
 import java.lang.reflect.Method;
 
-public final class TableDescriptor {
+public final class DefaultTableDescriptor {
 
     private final Table tableAnnotation;
 
-    public TableDescriptor(Class<? extends AbstractTable> tableClass) {
+    public DefaultTableDescriptor(Class<? extends AbstractTable> tableClass) {
         this.tableAnnotation = tableClass.getAnnotation(Table.class);
         if(this.tableAnnotation == null)
             throw new IllegalArgumentException("Class " + tableClass.getName() + " has no AbstractTable annotation.");

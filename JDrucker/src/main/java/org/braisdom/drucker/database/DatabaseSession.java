@@ -5,10 +5,10 @@ import java.util.List;
 
 public interface DatabaseSession {
 
-    public RowEntityAdapter executeQuery(String sql) throws SQLException;
+    public RowEntityAdapter executeQuery(Class<? extends AbstractTable> tableClass, String sql) throws SQLException;
 
-    public List<RowEntityAdapter> executeQueryMany(String sql) throws SQLException;
+    public List<RowEntityAdapter> executeQueryMany(Class<? extends AbstractTable> tableClass, String sql) throws SQLException;
 
-    public int executeUpdate(String sql) throws SQLException;
+    public int executeUpdate(Class<? extends AbstractTable> tableClass, String sql) throws SQLException;
 
 }

@@ -14,8 +14,7 @@ public class TableBehaviorProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Class<? extends AbstractTable> declaringClass = (Class<? extends AbstractTable>) method.getDeclaringClass();
-        TableDescriptor tableDescriptor = new TableDescriptor(declaringClass);
-        databaseSession.executeQuery("insert into users(name, gender) values ('wangyonghe', 'male')");
+        databaseSession.executeQuery(declaringClass, "select * from users limit 1");
         if(AbstractTable.class.equals(declaringClass)) {
 
         }
