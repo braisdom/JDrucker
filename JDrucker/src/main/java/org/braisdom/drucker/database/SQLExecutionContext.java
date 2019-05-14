@@ -3,7 +3,7 @@ package org.braisdom.drucker.database;
 import org.braisdom.drucker.annotation.SQL;
 import org.braisdom.drucker.annotation.SQLParam;
 
-public interface SQLExecuteContext {
+public interface SQLExecutionContext {
 
     SQL getSql();
 

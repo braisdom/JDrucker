@@ -16,7 +16,7 @@ public class SampleController {
 
     @RequestMapping("/")
     public String sayHello() {
-        userTable.findAll();
+        userTable.findAll(10);
         return "Hello";
     }
 

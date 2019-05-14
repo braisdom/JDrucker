@@ -27,7 +27,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     @Override
     public EntityAdapter executeQuery(Class<? extends AbstractTable> tableClass,
-                                      SQL sql, SQLExecuteContext sqlExecuteContext) throws SQLException {
+                                      SQL sql, SQLExecutionContext sqlExecutionContext) throws SQLException {
         Table tableAnnotation = tableClass.getAnnotation(Table.class);
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
@@ -45,7 +45,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     @Override
     public List<EntityAdapter> executeQueryMany(Class<? extends AbstractTable> tableClass,
-                                                SQL sql, SQLExecuteContext sqlExecuteContext) throws SQLException {
+                                                SQL sql, SQLExecutionContext sqlExecutionContext) throws SQLException {
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
         Statement statement = null;

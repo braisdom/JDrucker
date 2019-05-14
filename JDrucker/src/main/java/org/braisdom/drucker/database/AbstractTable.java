@@ -9,10 +9,10 @@ import java.util.List;
 @Table(file = "/sql/abstract_table.xsql")
 public interface AbstractTable<T> {
 
-    @SQL(id = "find_by_id", sqlType = SQLExecutionType.SELECT_ONE)
+    @SQL(id = "find_by_id", executionType = SQLExecutionType.SELECT_ONE)
     public T findById(@SQLParam("id") Integer id);
 
-    @SQL(id = "find_all", sqlType = SQLExecutionType.SELECT_MANY)
+    @SQL(id = "find_all", executionType = SQLExecutionType.SELECT_MANY)
     public List<T> findAll(@SQLParam("limit") int limit);
 
     public Integer deleteById(@SQLParam("id") Integer id);

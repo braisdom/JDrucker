@@ -13,5 +13,5 @@ public @interface SQL {
 
     String id() default "";
 
-    SQLExecutionType sqlType();
+    SQLExecutionType executionType();
 }

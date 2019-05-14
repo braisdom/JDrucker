@@ -21,22 +21,22 @@ public class TableBehaviorProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Class<? extends AbstractTable> declaringClass = (Class<? extends AbstractTable>) method.getDeclaringClass();
         SQL sql = method.getAnnotation(SQL.class);
-        SQLExecuteContext sqlExecuteContext = new SQLExecuteContextImpl(sql, method.getParameters(), args);
-        if(SQLExecutionType.SELECT_ONE.equals(sql.sqlType()))
-            return databaseSession.executeQuery(declaringClass, sql, sqlExecuteContext);
-        else if(SQLExecutionType.SELECT_MANY.equals(sql.sqlType()))
-            return databaseSession.executeQueryMany(declaringClass, sql, sqlExecuteContext);
+        SQLExecutionContext sqlExecutionContext = new SQLExecutionContextImpl(sql, method.getParameters(), args);
+        if(SQLExecutionType.SELECT_ONE.equals(sql.executionType()))
+            return databaseSession.executeQuery(declaringClass, sql, sqlExecutionContext);
+        else if(SQLExecutionType.SELECT_MANY.equals(sql.executionType()))
+            return databaseSession.executeQueryMany(declaringClass, sql, sqlExecutionContext);
         else
             return databaseSession.executeUpdate(declaringClass, sql);
     }
 
-    protected class SQLExecuteContextImpl implements SQLExecuteContext {
+    protected class SQLExecutionContextImpl implements SQLExecutionContext {
 
         private final SQL sql;
         private final Parameter[] parameters;
         private final Object[] parameterValues;
 
-        public SQLExecuteContextImpl(SQL sql, Parameter[] parameters, Object[] parameterValues) {
+        public SQLExecutionContextImpl(SQL sql, Parameter[] parameters, Object[] parameterValues) {
             this.sql = sql;
             this.parameters = parameters;
             this.parameterValues = parameterValues;
