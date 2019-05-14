@@ -1,6 +1,6 @@
 package org.braisdom.drucker.database;
 
-import org.braisdom.drucker.annotation.Sql;
+import org.braisdom.drucker.annotation.SQL;
 import org.braisdom.drucker.annotation.Table;
 import org.braisdom.drucker.xsql.XSqlContext;
 
@@ -27,7 +27,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     @Override
     public EntityAdapter executeQuery(Class<? extends AbstractTable> tableClass,
-                                      Sql sql, SqlExecuteContext sqlExecuteContext) throws SQLException {
+                                      SQL sql, SQLExecuteContext sqlExecuteContext) throws SQLException {
         Table tableAnnotation = tableClass.getAnnotation(Table.class);
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
@@ -45,7 +45,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     @Override
     public List<EntityAdapter> executeQueryMany(Class<? extends AbstractTable> tableClass,
-                                                Sql sql, SqlExecuteContext sqlExecuteContext) throws SQLException {
+                                                SQL sql, SQLExecuteContext sqlExecuteContext) throws SQLException {
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
         Statement statement = null;
@@ -62,7 +62,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
-    public int executeUpdate(Class<? extends AbstractTable> tableClass, Sql sql) throws SQLException {
+    public int executeUpdate(Class<? extends AbstractTable> tableClass, SQL sql) throws SQLException {
         return 0;
     }
 

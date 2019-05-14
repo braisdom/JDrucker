@@ -1,7 +1,7 @@
 package org.braisdom.drucker.database;
 
-import org.braisdom.drucker.annotation.Sql;
-import org.braisdom.drucker.annotation.SqlParam;
+import org.braisdom.drucker.annotation.SQL;
+import org.braisdom.drucker.annotation.SQLParam;
 import org.braisdom.drucker.annotation.Table;
 
 import java.util.List;
@@ -9,15 +9,15 @@ import java.util.List;
 @Table(file = "/sql/abstract_table.xsql")
 public interface AbstractTable<T> {
 
-    @Sql(id = "find_by_id", sqlType = SqlType.QUERY_ONE)
-    public T findById(@SqlParam("id") Integer id);
+    @SQL(id = "find_by_id", sqlType = SQLExecutionType.SELECT_ONE)
+    public T findById(@SQLParam("id") Integer id);
 
-    @Sql(id = "find_all", sqlType = SqlType.QUERY_MANY)
-    public List<T> findAll(@SqlParam("limit") int limit);
+    @SQL(id = "find_all", sqlType = SQLExecutionType.SELECT_MANY)
+    public List<T> findAll(@SQLParam("limit") int limit);
 
-    public Integer deleteById(@SqlParam("id") Integer id);
+    public Integer deleteById(@SQLParam("id") Integer id);
 
-    public Integer updateById(@SqlParam("id") Integer id, T object);
+    public Integer updateById(@SQLParam("id") Integer id, T object);
 
     public Integer update(T object);
 

@@ -1,7 +1,7 @@
 package org.braisdom.drucker.database;
 
 import org.braisdom.drucker.WordUtil;
-import org.braisdom.drucker.annotation.Sql;
+import org.braisdom.drucker.annotation.SQL;
 import org.braisdom.drucker.annotation.Table;
 
 import java.lang.reflect.Method;
@@ -40,7 +40,7 @@ public final class DefaultTableDescriptor {
     }
 
     public String getSqlId(Method method) {
-        Sql sql = method.getAnnotation(Sql.class);
+        SQL sql = method.getAnnotation(SQL.class);
         if(sql == null || sql.id().length() == 0)
             return WordUtil.tableize(method.getName());
         return sql.id();

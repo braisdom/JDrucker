@@ -11,7 +11,7 @@ public class JDrucker {
 
     public static <T extends AbstractTable> T getProxy(Class<T> tableClass,
                                                        DatabaseSession databaseSession) {
-        TableBehaviorProxy tableBehaviorProxy = new TableBehaviorProxy(databaseSession);
+        TableBehaviorProxy tableBehaviorProxy = new TableBehaviorProxy(databaseSession, tableClass);
         Object object = Proxy.newProxyInstance(
                 tableClass.getClassLoader(), new Class<?>[]{tableClass}, tableBehaviorProxy);
         return tableClass.cast(object);

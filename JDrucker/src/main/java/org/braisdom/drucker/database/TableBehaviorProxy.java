@@ -1,7 +1,7 @@
 package org.braisdom.drucker.database;
 
-import org.braisdom.drucker.annotation.Sql;
-import org.braisdom.drucker.annotation.SqlParam;
+import org.braisdom.drucker.annotation.SQL;
+import org.braisdom.drucker.annotation.SQLParam;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -10,38 +10,40 @@ import java.lang.reflect.Parameter;
 public class TableBehaviorProxy implements InvocationHandler {
 
     private final DatabaseSession databaseSession;
+    private final Class<?> tableClass;
 
-    public TableBehaviorProxy(DatabaseSession databaseSession) {
+    public  TableBehaviorProxy(DatabaseSession databaseSession, Class<?> tableClass ) {
         this.databaseSession = databaseSession;
+        this.tableClass = tableClass;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Class<? extends AbstractTable> declaringClass = (Class<? extends AbstractTable>) method.getDeclaringClass();
-        Sql sql = method.getAnnotation(Sql.class);
-        SqlExecuteContext sqlExecuteContext = new SqlExecuteContextImpl(sql, method.getParameters(), args);
-        if(SqlType.QUERY_ONE.equals(sql.sqlType()))
+        SQL sql = method.getAnnotation(SQL.class);
+        SQLExecuteContext sqlExecuteContext = new SQLExecuteContextImpl(sql, method.getParameters(), args);
+        if(SQLExecutionType.SELECT_ONE.equals(sql.sqlType()))
             return databaseSession.executeQuery(declaringClass, sql, sqlExecuteContext);
-        else if(SqlType.QUERY_MANY.equals(sql.sqlType()))
+        else if(SQLExecutionType.SELECT_MANY.equals(sql.sqlType()))
             return databaseSession.executeQueryMany(declaringClass, sql, sqlExecuteContext);
         else
             return databaseSession.executeUpdate(declaringClass, sql);
     }
 
-    protected class SqlExecuteContextImpl implements SqlExecuteContext {
+    protected class SQLExecuteContextImpl implements SQLExecuteContext {
 
-        private final Sql sql;
+        private final SQL sql;
         private final Parameter[] parameters;
         private final Object[] parameterValues;
 
-        public SqlExecuteContextImpl(Sql sql, Parameter[] parameters, Object[] parameterValues) {
+        public SQLExecuteContextImpl(SQL sql, Parameter[] parameters, Object[] parameterValues) {
             this.sql = sql;
             this.parameters = parameters;
             this.parameterValues = parameterValues;
         }
 
         @Override
-        public Sql getSql() {
+        public SQL getSql() {
             return sql;
         }
 
@@ -51,8 +53,8 @@ public class TableBehaviorProxy implements InvocationHandler {
         }
 
         @Override
-        public SqlParam getSqlParam(int index) {
-            return parameters[index].getAnnotation(SqlParam.class);
+        public SQLParam getSqlParam(int index) {
+            return parameters[index].getAnnotation(SQLParam.class);
         }
 
         @Override
