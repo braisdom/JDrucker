@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * @author braisdom
  * @since 1.0.0
  */
-public final class XSqlParser {
+public final class XSQLParser {
 
     private static final String SQL_LINE_DELIMITER = "\n";
 
@@ -67,11 +67,11 @@ public final class XSqlParser {
                 xSqlBlockMap = new HashMap<>();
                 for(XSqlBlock block : this.blocks) {
                     if(xSqlBlockMap.containsKey(block.sqlId))
-                        throw new XSqlException("Duplicated sqlId: " + block.sqlId);
+                        throw new XSQLException("Duplicated sqlId: " + block.sqlId);
                     xSqlBlockMap.put(block.sqlId, block);
                 }
             } else
-                throw new XSqlException("Invalid blocks" + blocks);
+                throw new XSQLException("Invalid blocks" + blocks);
         }
 
         public XSqlBlock getSqlBlock(String sqlId) {
@@ -94,27 +94,33 @@ public final class XSqlParser {
     private static Map<String, XSqlFile> xSqlFileMap = new HashMap<>();
     private static Configuration templateConfiguration = new Configuration();
 
-    private XSqlParser(){}
+    private XSQLParser(){}
 
     public static final String parse(String file,
                                      String sqlId,
                                      Class resourceClass,
-                                     Map<String, Object> dataModel) throws IOException, TemplateException {
-        XSqlFile xSqlFile = xSqlFileMap.get(file);
+                                     Map<String, Object> dataModel) throws XSQLParsingException {
+        try {
+            XSqlFile xSqlFile = xSqlFileMap.get(file);
 
-        if(xSqlFile == null) {
-            BufferedReader buffer = new BufferedReader(new InputStreamReader(resourceClass.getResourceAsStream(file)));
-            String xSqlFileContent = buffer.lines().collect(Collectors.joining(SQL_LINE_DELIMITER));
-            xSqlFile = XSQL_PARSER.from(TOKENIZER, IGNORED).parse(xSqlFileContent);
-            xSqlFileMap.put(file, xSqlFile);
+            if (xSqlFile == null) {
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(resourceClass.getResourceAsStream(file)));
+                String xSqlFileContent = buffer.lines().collect(Collectors.joining(SQL_LINE_DELIMITER));
+                xSqlFile = XSQL_PARSER.from(TOKENIZER, IGNORED).parse(xSqlFileContent);
+                xSqlFileMap.put(file, xSqlFile);
+            }
+
+            String sql = xSqlFile.getSqlBlock(sqlId).sql;
+            StringWriter out = new StringWriter();
+
+            Template template = new Template(sqlId, sql, templateConfiguration);
+            template.process(dataModel, out);
+            return out.toString();
+        }catch (IOException ex) {
+            throw new XSQLParsingException(ex.getMessage(), ex);
+        }catch (TemplateException ex) {
+            throw new XSQLParsingException(ex.getMessage(), ex);
         }
-
-        String sql = xSqlFile.getSqlBlock(sqlId).sql;
-        StringWriter out = new StringWriter();
-
-        Template template = new Template(sqlId, sql, templateConfiguration);
-        template.process(dataModel, out);
-        return out.toString();
     }
 
     private static Parser term(String tokenName) {

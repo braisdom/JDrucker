@@ -6,8 +6,6 @@ public interface TableMetaData {
 
     String getDatabaseProductName() throws SQLException;
 
-    String getName();
-
     String[] getColumnNames();
 
     ColumnMetaData getColumnMetaData(String columnName);

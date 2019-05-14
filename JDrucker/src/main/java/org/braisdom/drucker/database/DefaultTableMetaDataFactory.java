@@ -20,7 +20,7 @@ public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
         return new TableMetaDataImpl(tableClass, databaseMetaData, resultSetMetaData);
     }
 
-    protected class TableMetaDataImpl implements TableMetaData {
+    protected static class TableMetaDataImpl implements TableMetaData {
 
         private final Map<String, ColumnMetaData> columnMetaDataMap;
         private final String[] columnNames;
@@ -47,14 +47,6 @@ public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
         @Override
         public String getDatabaseProductName() throws SQLException {
             return databaseMetaData.getDatabaseProductName();
-        }
-
-        @Override
-        public String getName() {
-            String rawTableName = tableAnnotation.tableName();
-            if (rawTableName == null || rawTableName.length() == 0)
-                return WordUtil.tableize(tableAnnotation.entityBeanClass().getSimpleName());
-            return rawTableName;
         }
 
         @Override

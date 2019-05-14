@@ -1,9 +1,9 @@
 # Find all objects from the table
 sql find_all {
-    SELECT ${ columns } FROM ${ table_name };
+    SELECT * FROM ${ table_name }
 }
 
 # Find objects by id
 sql find_by_id {
-    SELECT ${ columns } FROM ${ table_name } WHERE id = ${ id }
+    SELECT * FROM ${ table_name } WHERE id = ${ id }
 }
