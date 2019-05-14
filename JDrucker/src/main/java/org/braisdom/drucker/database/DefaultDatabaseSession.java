@@ -1,8 +1,11 @@
 package org.braisdom.drucker.database;
 
+import org.braisdom.drucker.WordUtil;
 import org.braisdom.drucker.annotation.SQL;
 import org.braisdom.drucker.annotation.Table;
-import org.braisdom.drucker.xsql.XSqlContext;
+import org.braisdom.drucker.xsql.XSQLContext;
+import org.braisdom.drucker.xsql.XSQLParser;
+import org.braisdom.drucker.xsql.XSQLParsingException;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -27,15 +30,22 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     @Override
     public EntityAdapter executeQuery(Class<?> tableClass, Class<?> declaringClass,
-                                      SQL sql, SQLExecutionContext sqlExecutionContext) throws SQLException {
+                                      SQL sql, SQLParameter[] sqlParameters) throws SQLException, XSQLParsingException {
         Table tableAnnotation = tableClass.getAnnotation(Table.class);
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
         Statement statement = null;
         try {
+            Table table = tableClass.getAnnotation(Table.class);
+            String tableName = getTableName(table);
+            XSQLContext xsqlContext = createXSqlContext(tableName, sqlParameters);
+            String sqlStatement = XSQLParser.parse(table.file(), sql.id(),
+                    table.entityBeanClass(), xsqlContext.toFreemarkContext());
             DatabaseMetaData databaseMetaData = connection.getMetaData();
+
             statement = connection.createStatement();
-//            resultSet = statement.executeQuery(sql);
+            resultSet = statement.executeQuery(sqlStatement);
+
             TableMetaData tableMetaData = getTableMetaData(tableClass, databaseMetaData, resultSet.getMetaData());
             return rowAdapterFactory.createRowAdapter(tableMetaData, resultSet);
         } finally {
@@ -45,14 +55,21 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     @Override
     public List<EntityAdapter> executeQueryMany(Class<?> tableClass, Class<?> declaringClass,
-                                                SQL sql, SQLExecutionContext sqlExecutionContext) throws SQLException {
+                                                SQL sql, SQLParameter[] sqlParameters) throws SQLException, XSQLParsingException {
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
         Statement statement = null;
         try {
+            Table table = tableClass.getAnnotation(Table.class);
+            String tableName = getTableName(table);
+            XSQLContext xsqlContext = createXSqlContext(tableName, sqlParameters);
+            String sqlStatement = XSQLParser.parse(table.file(), sql.id(),
+                    table.entityBeanClass(), xsqlContext.toFreemarkContext());
             DatabaseMetaData databaseMetaData = connection.getMetaData();
+
             statement = connection.createStatement();
-//            resultSet = statement.executeQuery(sql);
+            resultSet = statement.executeQuery(sqlStatement);
+
             TableMetaData tableMetaData = getTableMetaData(tableClass, databaseMetaData, resultSet.getMetaData());
             rowAdapterFactory.createRowAdapter(tableMetaData, resultSet);
             return null;
@@ -62,7 +79,8 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
-    public int executeUpdate(Class<?> tableClass, Class<?> declaringClass, SQL sql) throws SQLException {
+    public int executeUpdate(Class<?> tableClass, Class<?> declaringClass,
+                             SQL sql, SQLParameter[] sqlParameters) throws SQLException {
         return 0;
     }
 
@@ -76,8 +94,23 @@ public class DefaultDatabaseSession implements DatabaseSession {
         return tableMetaDataMap.get(tableClass.getName());
     }
 
-    private XSqlContext createXSqlContext() {
-        return null;
+    private String getTableName(Table table) {
+        String rawTableName = table.tableName();
+        if(WordUtil.isEmpty(rawTableName)) {
+            String className = table.entityBeanClass().getSimpleName();
+            WordUtil.tableize(WordUtil.replaceLast(className, "Table", ""));
+        }
+        return table.tableName();
+    }
+
+
+
+    private XSQLContext createXSqlContext(String tableName, SQLParameter[] sqlParameters) {
+        XSQLContext xsqlContext = new XSQLContext();
+        xsqlContext.addAttribute("table_name", tableName);
+        for(SQLParameter sqlParameter : sqlParameters)
+            xsqlContext.addAttribute(sqlParameter.getParam().value(), sqlParameter.getValue());
+        return xsqlContext;
     }
 
     private void close(Statement statement, ResultSet resultSet, Connection connection) throws SQLException {
