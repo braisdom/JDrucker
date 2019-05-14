@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -65,8 +66,8 @@ public final class XSQLParser {
             if (blocks instanceof List) {
                 this.blocks = (List<XSqlBlock>) blocks;
                 xSqlBlockMap = new HashMap<>();
-                for(XSqlBlock block : this.blocks) {
-                    if(xSqlBlockMap.containsKey(block.sqlId))
+                for (XSqlBlock block : this.blocks) {
+                    if (xSqlBlockMap.containsKey(block.sqlId))
                         throw new XSQLException("Duplicated sqlId: " + block.sqlId);
                     xSqlBlockMap.put(block.sqlId, block);
                 }
@@ -94,12 +95,22 @@ public final class XSQLParser {
     private static Map<String, XSqlFile> xSqlFileMap = new HashMap<>();
     private static Configuration templateConfiguration = new Configuration();
 
-    private XSQLParser(){}
+    private XSQLParser() {
+    }
 
     public static final String parse(String file,
                                      String sqlId,
                                      Class resourceClass,
                                      Map<String, Object> dataModel) throws XSQLParsingException {
+        Objects.requireNonNull(file, "xsql file cannot be null");
+        Objects.requireNonNull(sqlId, "sqlId cannot be null");
+        Objects.requireNonNull(dataModel, "dataModel cannot be null");
+
+        if (file.length() == 0)
+            throw new XSQLParsingException("xsql file is blank");
+        if (sqlId.length() == 0)
+            throw new XSQLParsingException("sqlId is blank");
+
         try {
             XSqlFile xSqlFile = xSqlFileMap.get(file);
 
@@ -116,9 +127,9 @@ public final class XSQLParser {
             Template template = new Template(sqlId, sql, templateConfiguration);
             template.process(dataModel, out);
             return out.toString();
-        }catch (IOException ex) {
+        } catch (IOException ex) {
             throw new XSQLParsingException(ex.getMessage(), ex);
-        }catch (TemplateException ex) {
+        } catch (TemplateException ex) {
             throw new XSQLParsingException(ex.getMessage(), ex);
         }
     }

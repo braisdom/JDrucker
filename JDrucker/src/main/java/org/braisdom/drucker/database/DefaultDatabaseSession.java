@@ -31,7 +31,6 @@ public class DefaultDatabaseSession implements DatabaseSession {
     @Override
     public EntityAdapter executeQuery(Class<?> tableClass, Class<?> declaringClass,
                                       SQL sql, SQLParameter[] sqlParameters) throws SQLException, XSQLParsingException {
-        Table tableAnnotation = tableClass.getAnnotation(Table.class);
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
         Statement statement = null;
@@ -98,7 +97,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
         String rawTableName = table.tableName();
         if(WordUtil.isEmpty(rawTableName)) {
             String className = table.entityBeanClass().getSimpleName();
-            WordUtil.tableize(WordUtil.replaceLast(className, "Table", ""));
+            return WordUtil.tableize(WordUtil.replaceLast(className, "Table", ""));
         }
         return table.tableName();
     }

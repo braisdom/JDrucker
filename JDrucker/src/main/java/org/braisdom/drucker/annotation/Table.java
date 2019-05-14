@@ -11,11 +11,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Table {
 
+    String file();
+
     Class entityBeanClass() default RawEntity.class;
 
     String tableName() default "";
-
-    String file() default  "";
 
     boolean uniqued() default false;
 
