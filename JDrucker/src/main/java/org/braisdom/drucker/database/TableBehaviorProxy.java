@@ -6,6 +6,7 @@ import org.braisdom.drucker.annotation.SQLParam;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Objects;
 
 public class TableBehaviorProxy implements InvocationHandler {
 
@@ -19,15 +20,16 @@ public class TableBehaviorProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Class<? extends AbstractTable> declaringClass = (Class<? extends AbstractTable>) method.getDeclaringClass();
+        Class<?> declaringClass = method.getDeclaringClass();
         SQL sql = method.getAnnotation(SQL.class);
         SQLExecutionContext sqlExecutionContext = new SQLExecutionContextImpl(sql, method.getParameters(), args);
+
         if(SQLExecutionType.SELECT_ONE.equals(sql.executionType()))
-            return databaseSession.executeQuery(declaringClass, sql, sqlExecutionContext);
+            return databaseSession.executeQuery(tableClass, declaringClass, sql, sqlExecutionContext);
         else if(SQLExecutionType.SELECT_MANY.equals(sql.executionType()))
-            return databaseSession.executeQueryMany(declaringClass, sql, sqlExecutionContext);
+            return databaseSession.executeQueryMany(tableClass, declaringClass, sql, sqlExecutionContext);
         else
-            return databaseSession.executeUpdate(declaringClass, sql);
+            return databaseSession.executeUpdate(tableClass, declaringClass, sql);
     }
 
     protected class SQLExecutionContextImpl implements SQLExecutionContext {

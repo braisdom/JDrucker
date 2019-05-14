@@ -14,7 +14,7 @@ import java.util.Map;
 public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
 
     @Override
-    public TableMetaData createTableMetaData(Class<? extends AbstractTable> tableClass,
+    public TableMetaData createTableMetaData(Class<?> tableClass,
                                              DatabaseMetaData databaseMetaData,
                                              ResultSetMetaData resultSetMetaData) throws SQLException {
         return new TableMetaDataImpl(tableClass, databaseMetaData, resultSetMetaData);
@@ -26,11 +26,11 @@ public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
         private final String[] columnNames;
 
         private final Table tableAnnotation;
-        private final Class<? extends AbstractTable> tableClass;
+        private final Class<?> tableClass;
         private final DatabaseMetaData databaseMetaData;
         private final ResultSetMetaData resultSetMetaData;
 
-        public TableMetaDataImpl(Class<? extends AbstractTable> tableClass,
+        public TableMetaDataImpl(Class<?> tableClass,
                                  DatabaseMetaData databaseMetaData,
                                  ResultSetMetaData resultSetMetaData) throws SQLException {
             this.tableClass = tableClass;
@@ -68,7 +68,7 @@ public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
         }
 
         @Override
-        public Class<? extends AbstractTable> getEntityBeanClass() {
+        public Class<?> getEntityBeanClass() {
             return tableClass;
         }
 

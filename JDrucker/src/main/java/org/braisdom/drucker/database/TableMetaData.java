@@ -12,7 +12,7 @@ public interface TableMetaData {
 
     ColumnMetaData getColumnMetaData(String columnName);
 
-    Class<? extends AbstractTable> getEntityBeanClass();
+    Class<?> getEntityBeanClass();
 
     class ColumnMetaData {
         private final String name;

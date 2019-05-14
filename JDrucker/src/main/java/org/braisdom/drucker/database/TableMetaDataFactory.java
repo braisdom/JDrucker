@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public interface TableMetaDataFactory {
 
-    public TableMetaData createTableMetaData(Class<? extends AbstractTable> tableClass,
+    public TableMetaData createTableMetaData(Class<?> tableClass,
                                              DatabaseMetaData databaseMetaData,
                                              ResultSetMetaData resultSetMetaData) throws SQLException;
 

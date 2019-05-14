@@ -26,7 +26,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
-    public EntityAdapter executeQuery(Class<? extends AbstractTable> tableClass,
+    public EntityAdapter executeQuery(Class<?> tableClass, Class<?> declaringClass,
                                       SQL sql, SQLExecutionContext sqlExecutionContext) throws SQLException {
         Table tableAnnotation = tableClass.getAnnotation(Table.class);
         Connection connection = databaseConnectionFactory.getConnection();
@@ -44,7 +44,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
-    public List<EntityAdapter> executeQueryMany(Class<? extends AbstractTable> tableClass,
+    public List<EntityAdapter> executeQueryMany(Class<?> tableClass, Class<?> declaringClass,
                                                 SQL sql, SQLExecutionContext sqlExecutionContext) throws SQLException {
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
@@ -62,11 +62,11 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
-    public int executeUpdate(Class<? extends AbstractTable> tableClass, SQL sql) throws SQLException {
+    public int executeUpdate(Class<?> tableClass, Class<?> declaringClass, SQL sql) throws SQLException {
         return 0;
     }
 
-    protected TableMetaData getTableMetaData(Class<? extends AbstractTable> tableClass, DatabaseMetaData databaseMetaData,
+    protected TableMetaData getTableMetaData(Class<?> tableClass, DatabaseMetaData databaseMetaData,
                                              ResultSetMetaData resultSetMetaData) throws SQLException {
         if (!tableMetaDataMap.containsKey(tableClass.getName())) {
             TableMetaData tableMetaData = tableMetaDataFactory.createTableMetaData(tableClass, databaseMetaData,
