@@ -6,14 +6,14 @@ import org.braisdom.drucker.annotation.Table;
 
 import java.util.List;
 
-@Table(file = "/sql/abstract_table.xsql", entityBeanClass = RawEntity.class)
+@Table(file = "/sql/abstract_table.xsql")
 public interface AbstractTable<T> {
 
     @Sql(id = "find_by_id", sqlType = SqlType.QUERY_ONE)
     public T findById(@SqlParam("id") Integer id);
 
     @Sql(id = "find_all", sqlType = SqlType.QUERY_MANY)
-    public List<T> findAll();
+    public List<T> findAll(@SqlParam("limit") int limit);
 
     public Integer deleteById(@SqlParam("id") Integer id);
 

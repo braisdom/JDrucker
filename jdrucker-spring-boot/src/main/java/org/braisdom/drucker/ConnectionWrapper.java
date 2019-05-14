@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-public class ConnectionWrapper implements Connection {
+final class ConnectionWrapper implements Connection {
 
     private final Connection connection;
     private final DataSource dataSource;

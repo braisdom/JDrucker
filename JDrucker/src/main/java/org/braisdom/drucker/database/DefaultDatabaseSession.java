@@ -13,8 +13,8 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     private final DatabaseConnectionFactory databaseConnectionFactory;
     private final TableMetaDataFactory tableMetaDataFactory;
-    private final Map<String, TableMetaData> tableMetaDataMap;
     private final RowAdapterFactory rowAdapterFactory;
+    private final Map<String, TableMetaData> tableMetaDataMap;
 
     public DefaultDatabaseSession(DatabaseConnectionFactory databaseConnectionFactory,
                                   TableMetaDataFactory tableMetaDataFactory,
