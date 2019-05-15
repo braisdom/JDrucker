@@ -98,27 +98,27 @@ public final class XSQLParser {
     private XSQLParser() {
     }
 
-    public static final String parse(String file,
+    public static final String parse(String fileName,
                                      String sqlId,
                                      Class resourceClass,
                                      Map<String, Object> dataModel) throws XSQLParsingException {
-        Objects.requireNonNull(file, "xsql file cannot be null");
+        Objects.requireNonNull(fileName, "xsql file cannot be null");
         Objects.requireNonNull(sqlId, "sqlId cannot be null");
         Objects.requireNonNull(dataModel, "dataModel cannot be null");
 
-        if (file.length() == 0)
+        if (fileName.length() == 0)
             throw new XSQLParsingException("xsql file is blank");
         if (sqlId.length() == 0)
             throw new XSQLParsingException("sqlId is blank");
 
         try {
-            XSqlFile xSqlFile = xSqlFileMap.get(file);
+            XSqlFile xSqlFile = xSqlFileMap.get(fileName);
 
             if (xSqlFile == null) {
-                BufferedReader buffer = new BufferedReader(new InputStreamReader(resourceClass.getResourceAsStream(file)));
+                BufferedReader buffer = new BufferedReader(new InputStreamReader(resourceClass.getResourceAsStream(fileName)));
                 String xSqlFileContent = buffer.lines().collect(Collectors.joining(SQL_LINE_DELIMITER));
                 xSqlFile = XSQL_PARSER.from(TOKENIZER, IGNORED).parse(xSqlFileContent);
-                xSqlFileMap.put(file, xSqlFile);
+                xSqlFileMap.put(fileName, xSqlFile);
             }
 
             String sql = xSqlFile.getSqlBlock(sqlId).sql;

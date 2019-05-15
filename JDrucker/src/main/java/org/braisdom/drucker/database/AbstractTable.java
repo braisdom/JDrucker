@@ -6,7 +6,7 @@ import org.braisdom.drucker.annotation.Table;
 
 import java.util.List;
 
-@Table(file = "/sql/abstract_table.xsql")
+@Table(file = "/xsql/abstract_table.xsql")
 public interface AbstractTable<T> {
 
     @SQL(id = "find_by_id", executionType = SQLExecutionType.SELECT_ONE)

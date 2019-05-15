@@ -37,9 +37,10 @@ public class DefaultDatabaseSession implements DatabaseSession {
         try {
             Table table = tableClass.getAnnotation(Table.class);
             String tableName = getTableName(table);
+            String fileName = getXsqlFileName(declaringClass, table);
             XSQLContext xsqlContext = createXSqlContext(tableName, sqlParameters);
-            String sqlStatement = XSQLParser.parse(table.file(), sql.id(),
-                    table.entityBeanClass(), xsqlContext.toFreemarkContext());
+            String sqlStatement = XSQLParser.parse(fileName, sql.id(),
+                    declaringClass, xsqlContext.toFreemarkContext());
             DatabaseMetaData databaseMetaData = connection.getMetaData();
 
             statement = connection.createStatement();
@@ -61,9 +62,10 @@ public class DefaultDatabaseSession implements DatabaseSession {
         try {
             Table table = tableClass.getAnnotation(Table.class);
             String tableName = getTableName(table);
+            String fileName = getXsqlFileName(declaringClass, table);
             XSQLContext xsqlContext = createXSqlContext(tableName, sqlParameters);
-            String sqlStatement = XSQLParser.parse(table.file(), sql.id(),
-                    table.entityBeanClass(), xsqlContext.toFreemarkContext());
+            String sqlStatement = XSQLParser.parse(fileName, sql.id(),
+                    declaringClass, xsqlContext.toFreemarkContext());
             DatabaseMetaData databaseMetaData = connection.getMetaData();
 
             statement = connection.createStatement();
@@ -95,29 +97,33 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     private String getTableName(Table table) {
         String rawTableName = table.tableName();
-        if(WordUtil.isEmpty(rawTableName)) {
+        if (WordUtil.isEmpty(rawTableName)) {
             String className = table.entityBeanClass().getSimpleName();
             return WordUtil.tableize(WordUtil.replaceLast(className, "Table", ""));
         }
         return table.tableName();
     }
 
-
+    private String getXsqlFileName(Class<?> declaringClass, Table table) {
+        if (AbstractTable.class.equals(declaringClass))
+            return declaringClass.getAnnotation(Table.class).file();
+        return table.file();
+    }
 
     private XSQLContext createXSqlContext(String tableName, SQLParameter[] sqlParameters) {
         XSQLContext xsqlContext = new XSQLContext();
         xsqlContext.addAttribute("table_name", tableName);
-        for(SQLParameter sqlParameter : sqlParameters)
+        for (SQLParameter sqlParameter : sqlParameters)
             xsqlContext.addAttribute(sqlParameter.getParam().value(), sqlParameter.getValue());
         return xsqlContext;
     }
 
     private void close(Statement statement, ResultSet resultSet, Connection connection) throws SQLException {
-        if(statement != null)
+        if (statement != null)
             statement.close();
         if (resultSet != null)
             resultSet.close();
-        if(connection != null)
+        if (connection != null)
             connection.close();
     }
 }
