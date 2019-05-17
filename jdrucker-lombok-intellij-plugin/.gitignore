@@ -11,7 +11,10 @@
 .mtj.tmp/
 
 #Intellij IDEA
-.idea
+.idea/
+out/
+gradle/
+build/
 
 # Package Files #
 *.jar
