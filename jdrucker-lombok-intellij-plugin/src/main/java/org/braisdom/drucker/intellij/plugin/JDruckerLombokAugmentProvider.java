@@ -2,7 +2,6 @@ package org.braisdom.drucker.intellij.plugin;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.augment.PsiAugmentProvider;
 import com.intellij.psi.impl.source.PsiExtensibleClass;
@@ -17,7 +16,7 @@ public class JDruckerLombokAugmentProvider extends PsiAugmentProvider {
     @Override
     protected <Psi extends PsiElement> List<Psi> getAugments(@NotNull PsiElement element, @NotNull Class<Psi> type) {
         final List<Psi> emptyResult = Collections.emptyList();
-        if ((type != PsiClass.class && type != PsiField.class && type != PsiMethod.class) || !(element instanceof PsiExtensibleClass)) {
+        if ((type != PsiClass.class && type != PsiMethod.class) || !(element instanceof PsiExtensibleClass)) {
             return emptyResult;
         }
 
