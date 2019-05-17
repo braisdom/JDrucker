@@ -1,22 +1,11 @@
 package org.braisdom.drucker.annotation;
 
-import org.braisdom.drucker.database.RawEntity;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Table {
-
-    String file();
-
-    String tableName();
-
-    Class entityBeanClass() default RawEntity.class;
-
-    boolean uniqued() default false;
-
+@Target({ElementType.METHOD, ElementType.TYPE})
+public @interface Primitive {
 }

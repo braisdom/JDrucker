@@ -8,11 +8,24 @@
     <artifactId>jdrucker-spring-boot</artifactId>
     <version>1.0.0</version>
 
+    <properties>
+        <lombok.version>1.14.8</lombok.version>
+        <metainf-services.version>1.8</metainf-services.version>
+        <eclipse.jdt.core.version>3.3.0-v_771</eclipse.jdt.core.version>
+        <auto-service.version>1.0-rc2</auto-service.version>
+    </properties>
+
     <dependencies>
 
         <dependency>
-            <groupId>com.github.braisdom</groupId>
+            <groupId>org.github.braisdom</groupId>
             <artifactId>JDrucker</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.github.braisdom</groupId>
+            <artifactId>jdrucker-lombok</artifactId>
             <version>1.0.0</version>
         </dependency>
 
@@ -28,20 +41,30 @@
             <version>5.1.6.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.4</version>
+        </dependency>
     </dependencies>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <configuration>
-                        <source>8</source>
-                        <target>8</target>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
+
 </project>

@@ -45,8 +45,12 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sqlStatement);
+            // The resultSet is closed while the empty resultSet occurred
+            if(resultSet.isClosed())
+                return null;
 
-            TableMetaData tableMetaData = getTableMetaData(tableClass, databaseMetaData, resultSet.getMetaData());
+            TableMetaData tableMetaData = getTableMetaData(tableClass, databaseMetaData,
+                    resultSet.getMetaData());
             return rowAdapterFactory.createRowAdapter(tableMetaData, resultSet);
         } finally {
             close(statement, resultSet, connection);

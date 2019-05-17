@@ -1,30 +1,32 @@
 package org.braisdom.drucker.database;
 
+import org.braisdom.drucker.annotation.Primitive;
 import org.braisdom.drucker.annotation.SQL;
 import org.braisdom.drucker.annotation.SQLParam;
 import org.braisdom.drucker.annotation.Table;
 
 import java.util.List;
 
-@Table(file = "/xsql/abstract_table.xsql")
+@Table(file = "/xsql/abstract_table.xsql", tableName = "null")
 public interface AbstractTable<T> {
 
+    @Primitive
     @SQL(id = "find_by_id", executionType = SQLExecutionType.SELECT_ONE)
-    public T findById(@SQLParam("id") Integer id);
+    T findById(@SQLParam("id") Integer id);
 
+    @Primitive
     @SQL(id = "find_all", executionType = SQLExecutionType.SELECT_MANY)
-    public List<T> findAll(@SQLParam("limit") int limit);
+    List<T> findAll(@SQLParam("limit") int limit);
 
-    public Integer deleteById(@SQLParam("id") Integer id);
+    @Primitive
+    Integer deleteById(@SQLParam("id") Integer id);
 
-    public Integer updateById(@SQLParam("id") Integer id, T object);
+    @Primitive
+    Integer updateById(@SQLParam("id") Integer id, T object);
 
-    public Integer update(T object);
+    @Primitive
+    Integer update(T object);
 
-    public T create(T object);
-
-    public Boolean exists(Integer id);
-
-    public Integer count();
-
+    @Primitive
+    T create(T object);
 }

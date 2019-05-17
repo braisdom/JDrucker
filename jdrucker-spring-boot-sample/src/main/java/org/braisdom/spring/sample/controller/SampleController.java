@@ -6,9 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/")
-@RestController
+import javax.servlet.ServletException;
+
 @Transactional
+@RestController
+@RequestMapping("/")
 public class SampleController {
 
     @Autowired
@@ -21,8 +23,8 @@ public class SampleController {
     }
 
     @RequestMapping("/say_hello")
-    public String sayHello1() {
-        userTable.findById(10);
-        return "Hello";
+    public String sayHello1() throws ServletException {
+        userTable.findById(1);
+        return null;
     }
 }

@@ -23,6 +23,8 @@ public class TableBehaviorProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Class<?> declaringClass = method.getDeclaringClass();
         SQL sql = method.getAnnotation(SQL.class);
+        if(sql == null)
+            throw new IllegalSQLTypeException("The SQL annotation is required on method: " + method.getName());
         SQLParameter[] sqlParameters = createParameters(method.getParameters(), args);
 
         if (SQLExecutionType.SELECT_ONE.equals(sql.executionType()))
