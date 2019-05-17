@@ -1,0 +1,35 @@
+plugins {
+    id "org.jetbrains.intellij" version "0.4.8"
+    id "org.jetbrains.grammarkit" version "2018.3"
+    id "com.github.ManifestClasspath" version "0.1.0-RELEASE"
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'org.jetbrains.grammarkit'
+apply plugin: 'jacoco'
+apply plugin: "com.github.ManifestClasspath"
+
+
+group 'org.github.braisdom'
+version '1.0.0'
+
+intellij {
+    version '2018.3'
+}
+patchPluginXml {
+    changeNotes """
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>"""
+}
+
+dependencies {
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.14.8', classifier: 'sources', ext: 'jar'
+    implementation group: 'org.github.braisdom', name: 'jdrucker-lombok', version: '1.0.0'
+}
