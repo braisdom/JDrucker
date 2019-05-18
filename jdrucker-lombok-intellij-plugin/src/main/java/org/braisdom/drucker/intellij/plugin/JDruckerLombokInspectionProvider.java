@@ -7,7 +7,6 @@ public class JDruckerLombokInspectionProvider implements InspectionToolProvider 
     @NotNull
     @Override
     public Class[] getInspectionClasses() {
-        System.out.println("----------------");
         return new Class[]{JDruckerLombokInspection.class};
     }
 }

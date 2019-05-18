@@ -1,17 +1,19 @@
 <!--suppress PluginXmlValidity -->
 <idea-plugin>
-    <id>org.github.braisdom.jbrucker-lombok-intellij-plugin</id>
+    <id>JDrucker Lombok Plug</id>
     <name>JDrucker Lombok Plugin</name>
     <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
-    <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
-    ]]></description>
+    <description><![CDATA[ ]]></description>
+
+    <idea-version since-build="181.00"/>
 
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.java</depends>
+
+    <extensionPoints>
+    </extensionPoints>
 
     <extensions defaultExtensionNs="com.intellij">
         <inspectionToolProvider implementation="org.braisdom.drucker.intellij.plugin.JDruckerLombokInspectionProvider"/>

@@ -1,39 +1,28 @@
 package org.braisdom.drucker.intellij.plugin;
 
-import com.intellij.codeInspection.AbstractBaseJavaLocalInspectionTool;
-import com.intellij.codeInspection.InspectionsBundle;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.JavaElementVisitor;
 import com.intellij.psi.PsiAnnotation;
 import com.intellij.psi.PsiElementVisitor;
-import com.intellij.psi.PsiMethodCallExpression;
-import org.jetbrains.annotations.Nls;
+import com.intellij.psi.PsiReferenceExpression;
+import de.plushnikov.intellij.lombok.problem.LombokProblem;
+import de.plushnikov.intellij.lombok.processor.LombokProcessor;
+import de.plushnikov.intellij.plugin.inspection.LombokInspection;
 import org.jetbrains.annotations.NotNull;
 
-public class JDruckerLombokInspection extends AbstractBaseJavaLocalInspectionTool {
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
-    @NotNull
-    @Override
-    public String getDisplayName() {
-        return "JDrucker Lombok annotations inspection";
-    }
+public class JDruckerLombokInspection extends LombokInspection {
 
-    @Nls
-    @NotNull
-    @Override
-    public String getGroupDisplayName() {
-        return InspectionsBundle.message("group.names.probable.bugs");
-    }
+    private Map<String, LombokProcessor> allProblemHandlers;
 
-    @NotNull
-    @Override
-    public String getShortName() {
-        return "JDruckerLombok";
-    }
+    public JDruckerLombokInspection() {
+        JDruckerActiveRecordProcessor activeRecordProcessor = new JDruckerActiveRecordProcessor();
+        allProblemHandlers = new HashMap<>();
 
-    @Override
-    public boolean isEnabledByDefault() {
-        return true;
+        allProblemHandlers.put(activeRecordProcessor.getSupportedAnnotation(), activeRecordProcessor);
     }
 
     @NotNull
@@ -44,17 +33,30 @@ public class JDruckerLombokInspection extends AbstractBaseJavaLocalInspectionToo
 
     private class JDruckerLombokVisitor extends JavaElementVisitor {
 
+        private final ProblemsHolder holder;
+
         public JDruckerLombokVisitor(ProblemsHolder holder) {
+            this.holder = holder;
         }
 
         @Override
-        public void visitMethodCallExpression(PsiMethodCallExpression expression) {
-            super.visitMethodCallExpression(expression);
+        public void visitReferenceExpression(PsiReferenceExpression expression) {
+            // do nothing, just implement
         }
 
         @Override
         public void visitAnnotation(PsiAnnotation annotation) {
             super.visitAnnotation(annotation);
+
+            final String qualifiedName = annotation.getQualifiedName();
+            if (null != qualifiedName && allProblemHandlers.containsKey(qualifiedName)) {
+                LombokProcessor inspector = allProblemHandlers.get(qualifiedName);
+                Collection<LombokProblem> problems = inspector.verifyAnnotation(annotation);
+                for (LombokProblem problem : problems) {
+                    holder.registerProblem(annotation, problem.getMessage(),
+                            problem.getHighlightType(), problem.getQuickFixes());
+                }
+            }
         }
     }
 }
