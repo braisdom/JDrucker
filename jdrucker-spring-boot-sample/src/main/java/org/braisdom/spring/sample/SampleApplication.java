@@ -1,15 +1,12 @@
 package org.braisdom.spring.sample;
 
-import org.braisdom.drucker.TableDiscoverer;
-import org.braisdom.spring.sample.model.User;
+import org.braisdom.drucker.spring.TableDiscoverer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 import javax.annotation.Resource;
@@ -17,9 +14,7 @@ import javax.sql.DataSource;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-@EnableTransactionManagement
-@EnableAspectJAutoProxy(proxyTargetClass = true)
-@TableDiscoverer(classpath = {"org.braisdom.spring.sample.database"})
+@TableDiscoverer(classpath = {"org.braisdom.spring.sample.model"})
 public class SampleApplication implements TransactionManagementConfigurer {
 
     @Resource(name="transactionManager")

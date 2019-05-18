@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface SQL {
 
-    String id() default "";
+    String id();
 
     SQLExecutionType executionType();
 }

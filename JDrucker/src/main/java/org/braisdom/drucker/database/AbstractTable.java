@@ -28,5 +28,12 @@ public interface AbstractTable<T> {
     Integer update(T object);
 
     @Primitive
-    T create(T object);
+    Integer create(T object);
+
+    @Primitive
+    Boolean exists(Integer id);
+
+    @Primitive
+    Integer count();
+
 }

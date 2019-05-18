@@ -1,4 +1,4 @@
-package org.braisdom.drucker;
+package org.braisdom.drucker.spring;
 
 import org.springframework.jdbc.datasource.DataSourceUtils;
 

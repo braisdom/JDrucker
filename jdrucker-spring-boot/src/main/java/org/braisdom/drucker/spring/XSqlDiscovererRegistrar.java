@@ -1,4 +1,4 @@
-package org.braisdom.drucker;
+package org.braisdom.drucker.spring;
 
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -47,13 +47,14 @@ public class XSqlDiscovererRegistrar implements ImportBeanDefinitionRegistrar, R
                     definition.setBeanClass(TableFactoryBean.class);
                     definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE
                             | AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR);
+                    definition.setLazyInit(true);
                 }
                 return beanDefinitionHolders;
             }
 
             @Override
             protected boolean isCandidateComponent(AnnotatedBeanDefinition beanDefinition) {
-                return beanDefinition.getMetadata().isInterface() && beanDefinition.getMetadata().isIndependent();
+                return beanDefinition.getMetadata().isAbstract() && beanDefinition.getMetadata().isIndependent();
             }
         };
 
@@ -77,7 +78,6 @@ public class XSqlDiscovererRegistrar implements ImportBeanDefinitionRegistrar, R
             }
         });
         scanner.scan(annoAttrs.getStringArray("classpath"));
-
     }
 
 }

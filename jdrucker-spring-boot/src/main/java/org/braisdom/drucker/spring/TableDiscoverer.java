@@ -1,5 +1,6 @@
-package org.braisdom.drucker;
+package org.braisdom.drucker.spring;
 
+import org.braisdom.drucker.spring.XSqlDiscovererRegistrar;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

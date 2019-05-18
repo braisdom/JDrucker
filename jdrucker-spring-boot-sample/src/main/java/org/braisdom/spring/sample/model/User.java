@@ -1,16 +1,22 @@
 package org.braisdom.spring.sample.model;
 
 import org.braisdom.drucker.ActiveRecord;
-import org.github.braisdom.lombok.ActiveRecordLombok;
+import org.braisdom.drucker.annotation.SQL;
+import org.braisdom.drucker.annotation.Table;
+import org.braisdom.drucker.database.SQLExecutionType;
+import org.springframework.transaction.annotation.Transactional;
 
-@ActiveRecordLombok
-public class User extends ActiveRecord {
+@Table(file = "/xsql/user.xsql", tableName = "users")
+public abstract class User extends ActiveRecord {
 
-    public User findById(Integer id) {
-        return null;
+    private String test = "Hello World";
+
+    @SQL(id = "test", executionType = SQLExecutionType.SELECT_ONE)
+    public abstract User findUser();
+
+    @Transactional
+    public void helloWorld() {
+        System.out.println();
     }
 
-    public void test() {
-        
-    }
 }

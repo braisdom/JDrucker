@@ -1,5 +1,6 @@
-package org.braisdom.drucker;
+package org.braisdom.drucker.spring;
 
+import org.braisdom.drucker.JDrucker;
 import org.braisdom.drucker.database.DatabaseSession;
 import org.springframework.beans.factory.FactoryBean;
 

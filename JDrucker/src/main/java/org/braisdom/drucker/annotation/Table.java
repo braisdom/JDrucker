@@ -13,7 +13,7 @@ public @interface Table {
 
     String file();
 
-    String tableName();
+    String tableName() default "";
 
     Class entityBeanClass() default RawEntity.class;
 
