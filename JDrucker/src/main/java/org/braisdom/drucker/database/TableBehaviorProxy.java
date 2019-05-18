@@ -5,7 +5,6 @@ import net.sf.cglib.proxy.MethodProxy;
 import org.braisdom.drucker.annotation.SQL;
 import org.braisdom.drucker.annotation.SQLParam;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -32,19 +31,18 @@ public class TableBehaviorProxy implements MethodInterceptor {
     @Override
     public Object intercept(Object object, Method method, Object[] args, MethodProxy proxy) throws Throwable {
         SQL sql = method.getAnnotation(SQL.class);
-        if (sql == null) {
+        if (sql == null)
             return proxy.invokeSuper(object, args);
-        } else {
-            Class<?> declaringClass = method.getDeclaringClass();
-            SQLParameter[] sqlParameters = createParameters(method.getParameters(), args);
 
-            if (SQLExecutionType.SELECT_ONE.equals(sql.executionType()))
-                return databaseSession.executeQuery(tableClass, declaringClass, sql, sqlParameters);
-            else if (SQLExecutionType.SELECT_MANY.equals(sql.executionType()))
-                return databaseSession.executeQueryMany(tableClass, declaringClass, sql, sqlParameters);
-            else
-                return databaseSession.executeUpdate(tableClass, declaringClass, sql, sqlParameters);
-        }
+        Class<?> declaringClass = method.getDeclaringClass();
+        SQLParameter[] sqlParameters = createParameters(method.getParameters(), args);
+
+        if (SQLExecutionType.SELECT_ONE.equals(sql.executionType()))
+            return databaseSession.executeQuery(tableClass, declaringClass, sql, sqlParameters);
+        else if (SQLExecutionType.SELECT_MANY.equals(sql.executionType()))
+            return databaseSession.executeQueryMany(tableClass, declaringClass, sql, sqlParameters);
+        else
+            return databaseSession.executeUpdate(tableClass, declaringClass, sql, sqlParameters);
     }
 
     private class SQLParameterImpl implements SQLParameter {

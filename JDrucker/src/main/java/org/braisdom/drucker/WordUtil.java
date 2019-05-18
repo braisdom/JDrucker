@@ -1,5 +1,7 @@
 package org.braisdom.drucker;
 
+import org.braisdom.drucker.database.AbstractTable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

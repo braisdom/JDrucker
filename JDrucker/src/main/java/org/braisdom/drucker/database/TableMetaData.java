@@ -18,11 +18,13 @@ public interface TableMetaData {
         private final Integer index;
         private final Integer scale;
         private final Integer notnull;
+        private final String typeName;
 
-        public ColumnMetaData(String name, Integer index, Integer type,
+        public ColumnMetaData(String name, Integer index, Integer type, String typeName,
                               Integer scale, Integer notnull) {
             this.name = name;
             this.type = type;
+            this.typeName = typeName;
             this.index = index;
             this.scale = scale;
             this.notnull = notnull;
@@ -34,6 +36,10 @@ public interface TableMetaData {
 
         public Integer getType() {
             return type;
+        }
+
+        public String getTypeName() {
+            return typeName;
         }
 
         public Integer getIndex() {

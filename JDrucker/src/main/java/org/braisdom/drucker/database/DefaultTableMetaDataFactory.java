@@ -1,6 +1,5 @@
 package org.braisdom.drucker.database;
 
-import org.braisdom.drucker.WordUtil;
 import org.braisdom.drucker.annotation.Table;
 
 import java.sql.DatabaseMetaData;
@@ -71,8 +70,8 @@ public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
             for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
                 String columnName = resultSetMetaData.getColumnName(columnIndex);
                 ColumnMetaData columnMetaData = new ColumnMetaData(resultSetMetaData.getColumnName(columnIndex), columnIndex,
-                        resultSetMetaData.getColumnType(columnIndex), resultSetMetaData.getScale(columnIndex),
-                        resultSetMetaData.isNullable(columnIndex));
+                        resultSetMetaData.getColumnType(columnIndex), resultSetMetaData.getColumnTypeName(columnIndex),
+                        resultSetMetaData.getScale(columnIndex), resultSetMetaData.isNullable(columnIndex));
                 columnMetaDatas.add(columnName);
                 columnMetaDataMap.put(columnName, columnMetaData);
             }
