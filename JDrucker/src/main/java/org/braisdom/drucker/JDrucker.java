@@ -1,6 +1,7 @@
 package org.braisdom.drucker;
 
 import net.sf.cglib.proxy.Enhancer;
+import org.braisdom.drucker.database.AbstractTable;
 import org.braisdom.drucker.database.DatabaseSession;
 import org.braisdom.drucker.database.TableBehaviorProxy;
 
@@ -8,8 +9,8 @@ import java.util.Objects;
 
 public class JDrucker {
 
-    public static Object getProxy(Class tableClass,
-                                  DatabaseSession databaseSession) {
+    public static <T extends AbstractTable> T getProxy(Class<T> tableClass,
+                                                       DatabaseSession databaseSession) {
         Objects.requireNonNull(databaseSession, "tableClass cannot be null");
         Objects.requireNonNull(tableClass, "databaseSession cannot be null");
 
@@ -19,7 +20,7 @@ public class JDrucker {
         enhancer.setSuperclass(tableClass);
         enhancer.setCallback(tableBehaviorProxy);
 
-        return enhancer.create();
+        return tableClass.cast(enhancer.create());
     }
 
 }

@@ -7,7 +7,7 @@ import org.braisdom.drucker.annotation.Table;
 
 import java.util.List;
 
-@Table(file = "/xsql/abstract_table.xsql", tableName = "null")
+@Table(file = "/xsql/abstract_table.xsql")
 public interface AbstractTable<T> {
 
     @Primitive

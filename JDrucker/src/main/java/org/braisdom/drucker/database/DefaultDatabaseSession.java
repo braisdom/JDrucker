@@ -16,15 +16,15 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     private final DatabaseConnectionFactory databaseConnectionFactory;
     private final TableMetaDataFactory tableMetaDataFactory;
-    private final RowAdapterFactory rowAdapterFactory;
+    private final EntityAdapterFactory entityAdapterFactory;
     private final Map<String, TableMetaData> tableMetaDataMap;
 
     public DefaultDatabaseSession(DatabaseConnectionFactory databaseConnectionFactory,
                                   TableMetaDataFactory tableMetaDataFactory,
-                                  RowAdapterFactory rowAdapterFactory) {
+                                  EntityAdapterFactory entityAdapterFactory) {
         this.databaseConnectionFactory = databaseConnectionFactory;
         this.tableMetaDataFactory = tableMetaDataFactory;
-        this.rowAdapterFactory = rowAdapterFactory;
+        this.entityAdapterFactory = entityAdapterFactory;
         this.tableMetaDataMap = new HashMap<>();
     }
 
@@ -38,20 +38,20 @@ public class DefaultDatabaseSession implements DatabaseSession {
             Table table = tableClass.getAnnotation(Table.class);
             String tableName = getTableName(table);
             String fileName = getXsqlFileName(declaringClass, table);
+
             XSQLContext xsqlContext = createXSqlContext(tableName, sqlParameters);
-            String sqlStatement = XSQLParser.parse(fileName, sql.id(),
-                    declaringClass, xsqlContext.toFreemarkContext());
-            DatabaseMetaData databaseMetaData = connection.getMetaData();
+            String sqlStatement = XSQLParser.parse(fileName, sql.id(), declaringClass, xsqlContext.toFreemarkContext());
 
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sqlStatement);
-            // The resultSet is closed while the empty resultSet occurred
+            // The resultSet is closed while the empty resultSet appeared
             if(resultSet.isClosed())
                 return null;
 
-            TableMetaData tableMetaData = getTableMetaData(tableClass, databaseMetaData,
+            TableMetaData tableMetaData = getTableMetaData(tableClass, connection.getMetaData(),
                     resultSet.getMetaData());
-            return rowAdapterFactory.createRowAdapter(tableMetaData, resultSet);
+
+            return entityAdapterFactory.createEntityAdapter(tableMetaData, resultSet);
         } finally {
             close(statement, resultSet, connection);
         }
@@ -76,7 +76,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
             resultSet = statement.executeQuery(sqlStatement);
 
             TableMetaData tableMetaData = getTableMetaData(tableClass, databaseMetaData, resultSet.getMetaData());
-            rowAdapterFactory.createRowAdapter(tableMetaData, resultSet);
+            entityAdapterFactory.createEntityAdapter(tableMetaData, resultSet);
             return null;
         } finally {
             close(statement, resultSet, connection);
@@ -111,6 +111,8 @@ public class DefaultDatabaseSession implements DatabaseSession {
     private String getXsqlFileName(Class<?> declaringClass, Table table) {
         if (AbstractTable.class.equals(declaringClass))
             return declaringClass.getAnnotation(Table.class).file();
+        else if(WordUtil.isEmpty(table.tableName()))
+            return "/xsql/" + WordUtil.tableize(declaringClass.getSimpleName()) +".xsql";
         return table.file();
     }
 

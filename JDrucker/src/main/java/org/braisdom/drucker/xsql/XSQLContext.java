@@ -22,4 +22,8 @@ public class XSQLContext {
         attributes.putAll(functionMap);
         return attributes;
     }
+
+    public static void registerFunction(String name, XSQLFunction xsqlFunction) {
+        functionMap.put(name, xsqlFunction);
+    }
 }
