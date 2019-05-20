@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,8 +46,10 @@ public class DefaultEntityAdapterFactory implements EntityAdapterFactory {
         }
 
         @Override
-        public Map<String, Object> getRaw() {
-            return Collections.unmodifiableMap(columnValueHolder);
+        public RawEntity getRaw() {
+            RawEntity rawEntity = new RawEntity();
+            rawEntity.setAttributes(columnValueHolder);
+            return rawEntity;
         }
 
         private void extractRow() throws SQLException {
