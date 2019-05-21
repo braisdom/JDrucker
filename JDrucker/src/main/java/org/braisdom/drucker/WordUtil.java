@@ -712,7 +712,7 @@ public class WordUtil {
     }
 
     /**
-     * Returns a database table tableName corresponding to the input entityBeanClass class
+     * Returns a database table tableName corresponding to the input entityClass class
      * tableName.
      *
      * <pre>
@@ -722,14 +722,14 @@ public class WordUtil {
      * </pre>
      *
      * @param modelClassName
-     * @return the table tableName of the java entityBeanClass class tableName
+     * @return the table tableName of the java entityClass class tableName
      */
     public static String tableize(String modelClassName) {
         return pluralize(underscore(modelClassName));
     }
 
     /**
-     * Returns a entityBeanClass class tableName corresponding to the input database
+     * Returns a entityClass class tableName corresponding to the input database
      * table tableName.
      *
      * <pre>
@@ -738,8 +738,8 @@ public class WordUtil {
      *   classify("line_items") ==> "LineItem"
      * </pre>
      *
-     * @param tableName java class tableName of the entityBeanClass
-     * @return a java entityBeanClass class tableName
+     * @param tableName java class tableName of the entityClass
+     * @return a java entityClass class tableName
      */
     public static String classify(String tableName) {
         return camelize(singularize(tableName));

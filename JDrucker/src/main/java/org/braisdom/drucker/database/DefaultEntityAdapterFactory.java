@@ -17,6 +17,8 @@ public class DefaultEntityAdapterFactory implements EntityAdapterFactory {
 
     static class EntityAdapterImpl implements EntityAdapter {
 
+        private static final Map<String, PropertyDescriptor> propertyDescriptorMap = new HashMap<>();
+
         private final TableMetaData tableMetaData;
         private final ResultSet resultSet;
         private final Map<String, Object> columnValueHolder;
@@ -34,8 +36,12 @@ public class DefaultEntityAdapterFactory implements EntityAdapterFactory {
             Class<?> entityBeanClass = tableMetaData.getEntityBeanClass();
             try {
                 BeanInfo beanInfo = Introspector.getBeanInfo(entityBeanClass);
-                Object entity = Beans.instantiate(entityBeanClass.getClassLoader(), entityBeanClass.getName());
-                return null;
+                GenericEntity entity = (GenericEntity) Beans.instantiate(entityBeanClass.getClassLoader(), entityBeanClass.getName());
+
+                entity.setAttributes(columnValueHolder);
+                entity.setTableMetaData(tableMetaData);
+
+                return entity;
             }catch (IOException ex) {
                 throw new EntityInstantiateException(ex.getMessage(), ex);
             }catch (ClassNotFoundException ex) {
@@ -46,10 +52,11 @@ public class DefaultEntityAdapterFactory implements EntityAdapterFactory {
         }
 
         @Override
-        public RawEntity getRaw() {
-            RawEntity rawEntity = new RawEntity();
-            rawEntity.setAttributes(columnValueHolder);
-            return rawEntity;
+        public GenericEntity getGeneric() {
+            GenericEntity genericEntity = new GenericEntity();
+            genericEntity.setAttributes(columnValueHolder);
+            genericEntity.setTableMetaData(tableMetaData);
+            return genericEntity;
         }
 
         private void extractRow() throws SQLException {

@@ -1,24 +1,38 @@
 package org.braisdom.drucker.database;
 
+import org.braisdom.drucker.database.TableMetaData.ColumnMetaData;
+
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
-public class RawEntity {
+public class GenericEntity {
 
     private Map<String, Object> attributes = new HashMap<>();
+    private TableMetaData tableMetaData;
 
     final void setAttributes(Map<String, Object> attributes) {
-        Objects.requireNonNull(attributes, "attributes cannot be null");
         this.attributes = attributes;
     }
 
+    final void setTableMetaData(TableMetaData tableMetaData) {
+        this.tableMetaData = tableMetaData;
+    }
+
+    public TableMetaData getTableMetaData() {
+        return tableMetaData;
+    }
+
+    public ColumnMetaData getColumnMetaData(String columnName) {
+        return tableMetaData.getColumnMetaData(columnName);
+    }
+
     public Map<String, Object> getAttributes() {
-        return attributes;
+        return Collections.unmodifiableMap(attributes);
     }
 
     public String getString(String columnName) {
@@ -37,8 +51,8 @@ public class RawEntity {
         return (Double) attributes.get(columnName);
     }
 
-    public byte[] getBytes(String columnName) {
-        return (byte[]) attributes.get(columnName);
+    public Byte[] getBytes(String columnName) {
+        return (Byte[]) attributes.get(columnName);
     }
 
     public Boolean getBoolean(String columnName) {

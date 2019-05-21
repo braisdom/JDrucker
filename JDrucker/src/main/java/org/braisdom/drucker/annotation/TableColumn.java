@@ -11,5 +11,7 @@ public @interface TableColumn {
 
     String value() default "";
 
+    boolean updatable() default true;
+
     boolean onDuplicatedUpdated() default false;
 }

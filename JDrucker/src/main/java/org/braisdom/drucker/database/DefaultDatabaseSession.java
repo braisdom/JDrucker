@@ -102,7 +102,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
     private String getTableName(Table table) {
         String rawTableName = table.tableName();
         if (WordUtil.isEmpty(rawTableName)) {
-            String className = table.entityBeanClass().getSimpleName();
+            String className = table.entityClass().getSimpleName();
             return WordUtil.tableize(className);
         }
         return table.tableName();

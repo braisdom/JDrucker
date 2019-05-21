@@ -29,11 +29,4 @@ public interface AbstractTable<T> {
 
     @Primitive
     Integer create(T object);
-
-    @Primitive
-    Boolean exists(Integer id);
-
-    @Primitive
-    Integer count();
-
 }

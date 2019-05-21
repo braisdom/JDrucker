@@ -4,6 +4,6 @@ public interface EntityAdapter {
 
     public Object getEntity() throws EntityInstantiateException;
 
-    public RawEntity getRaw();
+    public GenericEntity getGeneric();
 
 }

@@ -50,7 +50,7 @@ public interface TableMetaData {
             return scale;
         }
 
-        public Integer isColumnNotnull() {
+        public Integer isNotnull() {
             return notnull;
         }
     }
