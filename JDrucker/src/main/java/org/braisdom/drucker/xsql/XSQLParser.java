@@ -29,7 +29,7 @@ public final class XSQLParser {
     private static final Terminals TERMS = Terminals
             .operators(new String[]{})
             .words(IDENTIFIER)
-            .keywords("sql")
+            .keywords("sql", "dialect:", "mysql", "new table", "migrations", "version", "oracle", "sqlite", "postgresql")
             .build();
 
     private static final Parser<Void> IGNORED = Parsers.or(
@@ -41,6 +41,14 @@ public final class XSQLParser {
     private static final Parser<?> TOKENIZER = Parsers.or(
             new SqlBlockScanner(),
             TERMS.tokenizer()
+    );
+
+    private static final Parser<?> SQL_DIALECT = Parsers.or(
+            term("mysql"), term("oracle"), term("sqlite"), term("postgresql")
+    );
+
+    private static final Parser<?> DIALECT_BLOCK = Parsers.sequence(
+            term("dialect:"), SQL_DIALECT
     );
 
     private static final Parser<XSqlBlock> SQL_BLOCK_PARSER = Parsers.sequence(
@@ -55,7 +63,7 @@ public final class XSQLParser {
 
 
     private static final Parser<XSqlFile> XSQL_PARSER = Parsers
-            .sequence(SQL_BLOCK_PARSER.many()).map(XSqlFile::new);
+            .or(DIALECT_BLOCK.optional(null), SQL_BLOCK_PARSER.many()).map(XSqlFile::new);
 
     private static class XSqlFile {
 

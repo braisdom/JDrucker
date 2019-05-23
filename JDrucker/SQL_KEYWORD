@@ -59,6 +59,7 @@ DUAL
 EACH
 ELSE
 ELSEIF
+ENGINE
 ENCLOSED
 ESCAPED
 EXISTS
@@ -100,6 +101,7 @@ INT8
 INTEGER
 INTERVAL
 INTO
+InnoDB
 IO_AFTER_GTIDS
 IO_BEFORE_GTIDS
 IS
@@ -137,7 +139,7 @@ MINUTE_SECOND
 MOD
 MODIFIES
 NATURAL
-NOT
+NOT NULL
 NO_WRITE_TO_BINLOG
 NULL
 NUMERIC
@@ -271,3 +273,12 @@ TRUNCATE()
 sql
 {}
 ${}
+new table
+migrations
+version
+oracle
+mysql
+sqlite
+postgresql
+dialect:
+initialize
