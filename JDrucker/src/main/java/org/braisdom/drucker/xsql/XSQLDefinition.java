@@ -5,17 +5,18 @@ import antlr4.XSQLLexer;
 import antlr4.XSQLParser;
 import antlr4.XSQLParser.*;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
+import java.util.Map;
 
-public class XSQLDeclarations extends XSQLBaseListener implements ANTLRErrorListener {
+public class XSQLDefinition extends XSQLBaseListener {
+
+    public static final String DIALECT_MYSQL = "mysql";
+    public static final String DIALECT_SQLITE = "sqlite";
 
     public static class XSQLDeclaration {
         private String dialect;
@@ -114,7 +115,7 @@ public class XSQLDeclarations extends XSQLBaseListener implements ANTLRErrorList
         }
     }
 
-    public static class SqlStatementContainer {
+    static class SqlStatementContainer {
         private List<String> sqlStatements = new ArrayList<>();
 
         public List<String> getSqlStatements() {
@@ -126,45 +127,29 @@ public class XSQLDeclarations extends XSQLBaseListener implements ANTLRErrorList
         }
     }
 
+    private static class XSQLErrorListener extends BaseErrorListener {
+        @Override
+        public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
+                                int charPositionInLine, String msg, RecognitionException e) {
+            throw new XSQLSyntaxError("line " + line + ":" + charPositionInLine + " " + msg.trim());
+        }
+    }
+
     private XSQLDeclaration xsqlDeclaration;
 
-    private XSQLDeclarations() {
+    private XSQLDefinition() {
         xsqlDeclaration = new XSQLDeclaration();
     }
 
     @Override
-    public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
-                            int charPositionInLine, String msg, RecognitionException e) {
-        throw new XSQLSyntaxError("line " + line + ":" + charPositionInLine + " " + msg.trim());
-    }
-
-    @Override
-    public void reportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex,
-                                boolean exact, BitSet ambigAlts, ATNConfigSet configs) {
-
-    }
-
-    @Override
-    public void reportAttemptingFullContext(Parser recognizer, DFA dfa, int startIndex,
-                                            int stopIndex, BitSet conflictingAlts, ATNConfigSet configs) {
-
-    }
-
-    @Override
-    public void reportContextSensitivity(Parser recognizer, DFA dfa, int startIndex, int stopIndex,
-                                         int prediction, ATNConfigSet configs) {
-
-    }
-
-    @Override
     public void enterXsqlDecl(XSQLParser.XsqlDeclContext ctx) {
-        DialectDeclContext declContext = ctx.dialectDecl();
+        DialectDeclContext dialectContext = ctx.dialectDecl();
         InitDeclContext initDeclContext = ctx.initDecl();
         MigrationsDeclContext migrationsDeclContext = ctx.migrationsDecl();
         List<SqlDeclContext> sqlDeclContexts = ctx.sqlDecl();
-        if (declContext != null) {
-            if (declContext.dialectOption() != null)
-                xsqlDeclaration.setDialect(declContext.dialectOption().getText());
+        if (dialectContext != null) {
+            if (dialectContext.dialectOption() != null)
+                xsqlDeclaration.setDialect(dialectContext.dialectOption().getText());
         }
 
         if(initDeclContext != null) {
@@ -197,9 +182,8 @@ public class XSQLDeclarations extends XSQLBaseListener implements ANTLRErrorList
             Sql sql = new Sql();
             List<TerminalNode> rawSqls = sqlDeclContext.sqlBlock().SQL();
             sql.setDialect(sqlDeclContext.dialectOption().getText());
-            List<String> sqlStatements = new ArrayList<>();
             for(TerminalNode rawSql : rawSqls)
-                sqlStatements.add(rawSql.getText());
+                sql.addSqlStatement(rawSql.getText());
             xsqlDeclaration.addSqlStatement(sql);
         }
     }
@@ -209,9 +193,10 @@ public class XSQLDeclarations extends XSQLBaseListener implements ANTLRErrorList
         XSQLLexer xsqlLexer = new XSQLLexer((charStream));
         CommonTokenStream commonStream = new CommonTokenStream(xsqlLexer);
         XSQLParser xsqlParser = new XSQLParser(commonStream);
-        XSQLDeclarations xsqlDeclarations = new XSQLDeclarations();
-        xsqlParser.addErrorListener(xsqlDeclarations);
-        xsqlParser.xsqlDecl().enterRule(xsqlDeclarations);
-        return xsqlDeclarations.xsqlDeclaration;
+        XSQLDefinition xsqlDefinition = new XSQLDefinition();
+
+        xsqlParser.addErrorListener(new XSQLErrorListener());
+        xsqlParser.xsqlDecl().enterRule(xsqlDefinition);
+        return xsqlDefinition.xsqlDeclaration;
     }
 }

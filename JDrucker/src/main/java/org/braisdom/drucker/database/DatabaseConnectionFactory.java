@@ -6,5 +6,4 @@ import java.sql.SQLException;
 public interface DatabaseConnectionFactory {
 
     Connection getConnection() throws SQLException;
-
 }

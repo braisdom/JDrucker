@@ -11,36 +11,41 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class DefaultDatabaseSession implements DatabaseSession {
 
     private final DatabaseConnectionFactory databaseConnectionFactory;
     private final TableMetaDataFactory tableMetaDataFactory;
-    private final EntityAdapterFactory entityAdapterFactory;
+    private final TableRowFactory tableRowFactory;
     private final Map<String, TableMetaData> tableMetaDataMap;
 
     public DefaultDatabaseSession(DatabaseConnectionFactory databaseConnectionFactory,
                                   TableMetaDataFactory tableMetaDataFactory,
-                                  EntityAdapterFactory entityAdapterFactory) {
+                                  TableRowFactory tableRowFactory) {
+        Objects.requireNonNull(databaseConnectionFactory, "databaseConnectionFactory cannot be null");
+        Objects.requireNonNull(tableMetaDataFactory, "tableMetaDataFactory cannot be null");
+        Objects.requireNonNull(tableRowFactory, "tableRowFactory cannot be null");
+
         this.databaseConnectionFactory = databaseConnectionFactory;
         this.tableMetaDataFactory = tableMetaDataFactory;
-        this.entityAdapterFactory = entityAdapterFactory;
+        this.tableRowFactory = tableRowFactory;
         this.tableMetaDataMap = new HashMap<>();
     }
 
     @Override
-    public EntityAdapter executeQuery(Class<?> tableClass, Class<?> declaringClass,
-                                      SQL sql, SQLParameter[] sqlParameters) throws SQLException, XSQLParsingException {
+    public TableRow executeQuery(Class<?> tableClass, Class<? extends TableRow> tableRowClass,
+                                 SQL sql, SQLParameter[] sqlParameters) throws SQLException, XSQLParsingException {
         Connection connection = databaseConnectionFactory.getConnection();
         ResultSet resultSet = null;
         Statement statement = null;
         try {
             Table table = tableClass.getAnnotation(Table.class);
-            String tableName = getTableName(table);
-            String fileName = getXsqlFileName(declaringClass, table);
+            String tableName = getTableName(table, tableClass);
+            String fileName = getXsqlFileName(sql, table, tableClass);
 
             XSQLContext xsqlContext = createXSqlContext(tableName, sqlParameters);
-            String sqlStatement = XSQLParser.parse(fileName, sql.id(), declaringClass, xsqlContext.toFreemarkContext());
+            String sqlStatement = XSQLParser.parse(fileName, sql.id(), tableClass, xsqlContext.toFreemarkContext());
 
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sqlStatement);
@@ -51,32 +56,6 @@ public class DefaultDatabaseSession implements DatabaseSession {
             TableMetaData tableMetaData = getTableMetaData(tableClass, connection.getMetaData(),
                     resultSet.getMetaData());
 
-            return entityAdapterFactory.createEntityAdapter(tableMetaData, resultSet);
-        } finally {
-            close(statement, resultSet, connection);
-        }
-    }
-
-    @Override
-    public List<EntityAdapter> executeQueryMany(Class<?> tableClass, Class<?> declaringClass,
-                                                SQL sql, SQLParameter[] sqlParameters) throws SQLException, XSQLParsingException {
-        Connection connection = databaseConnectionFactory.getConnection();
-        ResultSet resultSet = null;
-        Statement statement = null;
-        try {
-            Table table = tableClass.getAnnotation(Table.class);
-            String tableName = getTableName(table);
-            String fileName = getXsqlFileName(declaringClass, table);
-            XSQLContext xsqlContext = createXSqlContext(tableName, sqlParameters);
-            String sqlStatement = XSQLParser.parse(fileName, sql.id(),
-                    declaringClass, xsqlContext.toFreemarkContext());
-            DatabaseMetaData databaseMetaData = connection.getMetaData();
-
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(sqlStatement);
-
-            TableMetaData tableMetaData = getTableMetaData(tableClass, databaseMetaData, resultSet.getMetaData());
-            entityAdapterFactory.createEntityAdapter(tableMetaData, resultSet);
             return null;
         } finally {
             close(statement, resultSet, connection);
@@ -84,7 +63,13 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
-    public int executeUpdate(Class<?> tableClass, Class<?> declaringClass,
+    public List<TableRow> executeQueryMany(Class<?> tableClass, Class<? extends TableRow> tableRowClass,
+                                           SQL sql, SQLParameter[] sqlParameters) throws SQLException, XSQLParsingException {
+        return null;
+    }
+
+    @Override
+    public int executeUpdate(Class<?> tableClass, Class<? extends TableRow> tableRowClass,
                              SQL sql, SQLParameter[] sqlParameters) throws SQLException {
         return 0;
     }
@@ -99,20 +84,20 @@ public class DefaultDatabaseSession implements DatabaseSession {
         return tableMetaDataMap.get(tableClass.getName());
     }
 
-    private String getTableName(Table table) {
+    private String getTableName(Table table, Class<?> tableClass) {
         String rawTableName = table.tableName();
         if (WordUtil.isEmpty(rawTableName)) {
-            String className = table.entityClass().getSimpleName();
+            String className = tableClass.getSimpleName();
             return WordUtil.tableize(className);
         }
-        return table.tableName();
+        return rawTableName;
     }
 
-    private String getXsqlFileName(Class<?> declaringClass, Table table) {
-        if (AbstractTable.class.equals(declaringClass))
-            return declaringClass.getAnnotation(Table.class).file();
+    private String getXsqlFileName(SQL sql, Table table, Class<?> tableClass) {
+        if (sql.primitive())
+            return TableBehavior.class.getAnnotation(Table.class).file();
         else if(WordUtil.isEmpty(table.tableName()))
-            return "/xsql/" + WordUtil.tableize(declaringClass.getSimpleName()) +".xsql";
+            return "/xsql/" + WordUtil.tableize(tableClass.getSimpleName()) +".xsql";
         return table.file();
     }
 

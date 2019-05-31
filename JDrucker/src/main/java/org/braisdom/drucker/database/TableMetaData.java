@@ -10,8 +10,6 @@ public interface TableMetaData {
 
     ColumnMetaData getColumnMetaData(String columnName);
 
-    Class<?> getEntityBeanClass();
-
     class ColumnMetaData {
         private final String name;
         private final Integer type;

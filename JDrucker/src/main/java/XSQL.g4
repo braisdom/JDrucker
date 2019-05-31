@@ -5,7 +5,7 @@ options {
     language = Java;
 }
 
-xsqlDecl: dialectDecl initDecl migrationsDecl? sqlDecl* EOF;
+xsqlDecl: dialectDecl? initDecl? migrationsDecl? sqlDecl* EOF;
 dialectDecl: DIALECT dialectOption ';';
 initDecl: 'initialize' tableName sqlBlock;
 migrationsDecl: 'migrations' '{' migrationsVersionDecl* '}';
@@ -18,7 +18,7 @@ tableName: ID+;
 SQL: SQL_BEGINNING_KEYWORDS .*? ';';
 SQL_BEGINNING_KEYWORDS: 'CREATE' | 'DROP' | 'SHOW' | 'USE' | 'DESCRIBE' | 'SELECT' | 'UPDATE' | 'DELETE' | 'ALTER' | 'INSERT'
     | 'CALL' | 'COMMIT' | 'RENAME' | 'TRUNCATE' | 'REPLACE'  | 'SAVEPOINT' | 'ROLLBACK' | 'DEALLOCATE' | 'DECLARE' | 'REPEAT'
-    | 'MERGE';
+    | 'MERGE' | 'ANALYZE' | 'DETACH' | 'EXPLAN';
 ID: ('A'..'Z' | 'a'..'z' | '_') ( 'A'..'Z' | 'a'..'z' | '_' | '0'..'9')+;
 WS : (' ' |'\t' |'\n' |'\r' )+ -> skip;
 COMMENT: '/*' .*? '*/' -> skip;

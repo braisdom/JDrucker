@@ -13,19 +13,15 @@ import java.util.List;
 public class TableBehaviorProxy implements MethodInterceptor {
 
     private final DatabaseSession databaseSession;
-    private final Class<?> tableClass;
+    private final Class<? extends TableBehavior> tableClass;
+    private final Class<? extends TableRow> tableRowClass;
 
-    public TableBehaviorProxy(DatabaseSession databaseSession, Class<?> tableClass) {
+    public TableBehaviorProxy(DatabaseSession databaseSession,
+                              Class<? extends TableBehavior> tableClass,
+                              Class<? extends TableRow> tableRowClass) {
         this.databaseSession = databaseSession;
         this.tableClass = tableClass;
-    }
-
-    private SQLParameter[] createParameters(Parameter[] rawParameters, Object[] values) {
-        List<SQLParameter> sqlParameters = new ArrayList<>();
-        for (int i = 0; i < rawParameters.length; i++) {
-            sqlParameters.add(new SQLParameterImpl(rawParameters[i], values[i]));
-        }
-        return sqlParameters.toArray(new SQLParameter[]{});
+        this.tableRowClass = tableRowClass;
     }
 
     @Override
@@ -34,15 +30,22 @@ public class TableBehaviorProxy implements MethodInterceptor {
         if (sql == null)
             return proxy.invokeSuper(object, args);
 
-        Class<?> declaringClass = method.getDeclaringClass();
         SQLParameter[] sqlParameters = createParameters(method.getParameters(), args);
 
         if (SQLExecutionType.SELECT_ONE.equals(sql.executionType()))
-            return databaseSession.executeQuery(tableClass, declaringClass, sql, sqlParameters);
+            return databaseSession.executeQuery(tableClass, tableRowClass, sql, sqlParameters);
         else if (SQLExecutionType.SELECT_MANY.equals(sql.executionType()))
-            return databaseSession.executeQueryMany(tableClass, declaringClass, sql, sqlParameters);
+            return databaseSession.executeQueryMany(tableClass, tableRowClass, sql, sqlParameters);
         else
-            return databaseSession.executeUpdate(tableClass, declaringClass, sql, sqlParameters);
+            return databaseSession.executeUpdate(tableClass, tableRowClass, sql, sqlParameters);
+    }
+
+    private SQLParameter[] createParameters(Parameter[] rawParameters, Object[] values) {
+        List<SQLParameter> sqlParameters = new ArrayList<>();
+        for (int i = 0; i < rawParameters.length; i++) {
+            sqlParameters.add(new SQLParameterImpl(rawParameters[i], values[i]));
+        }
+        return sqlParameters.toArray(new SQLParameter[]{});
     }
 
     private class SQLParameterImpl implements SQLParameter {

@@ -99,13 +99,13 @@ public class XSQLParser extends Parser {
 	}
 
 	public static class XsqlDeclContext extends ParserRuleContext {
+		public TerminalNode EOF() { return getToken(XSQLParser.EOF, 0); }
 		public DialectDeclContext dialectDecl() {
 			return getRuleContext(DialectDeclContext.class,0);
 		}
 		public InitDeclContext initDecl() {
 			return getRuleContext(InitDeclContext.class,0);
 		}
-		public TerminalNode EOF() { return getToken(XSQLParser.EOF, 0); }
 		public MigrationsDeclContext migrationsDecl() {
 			return getRuleContext(MigrationsDeclContext.class,0);
 		}
@@ -141,35 +141,51 @@ public class XSQLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(18);
-			dialectDecl();
 			setState(19);
-			initDecl();
-			setState(21);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==DIALECT) {
+				{
+				setState(18);
+				dialectDecl();
+				}
+			}
+
+			setState(22);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			if (_la==T__1) {
+				{
+				setState(21);
+				initDecl();
+				}
+			}
+
+			setState(25);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==T__2) {
 				{
-				setState(20);
+				setState(24);
 				migrationsDecl();
 				}
 			}
 
-			setState(26);
+			setState(30);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__5) | (1L << T__7) | (1L << T__8) | (1L << T__9) | (1L << T__10) | (1L << T__11))) != 0)) {
 				{
 				{
-				setState(23);
+				setState(27);
 				sqlDecl();
 				}
 				}
-				setState(28);
+				setState(32);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(29);
+			setState(33);
 			match(EOF);
 			}
 		}
@@ -214,11 +230,11 @@ public class XSQLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(31);
+			setState(35);
 			match(DIALECT);
-			setState(32);
+			setState(36);
 			dialectOption();
-			setState(33);
+			setState(37);
 			match(T__0);
 			}
 		}
@@ -265,11 +281,11 @@ public class XSQLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(35);
+			setState(39);
 			match(T__1);
-			setState(36);
+			setState(40);
 			tableName();
-			setState(37);
+			setState(41);
 			sqlBlock();
 			}
 		}
@@ -317,25 +333,25 @@ public class XSQLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(39);
+			setState(43);
 			match(T__2);
-			setState(40);
-			match(T__3);
 			setState(44);
+			match(T__3);
+			setState(48);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__6) {
 				{
 				{
-				setState(41);
+				setState(45);
 				migrationsVersionDecl();
 				}
 				}
-				setState(46);
+				setState(50);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(47);
+			setState(51);
 			match(T__4);
 			}
 		}
@@ -387,33 +403,33 @@ public class XSQLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(50);
+			setState(54);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__7) | (1L << T__8) | (1L << T__9) | (1L << T__10) | (1L << T__11))) != 0)) {
 				{
-				setState(49);
+				setState(53);
 				dialectOption();
 				}
 			}
 
-			setState(52);
+			setState(56);
 			match(T__5);
-			setState(54); 
+			setState(58); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(53);
+				setState(57);
 				match(ID);
 				}
 				}
-				setState(56); 
+				setState(60); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==ID );
-			setState(58);
+			setState(62);
 			sqlBlock();
 			}
 		}
@@ -458,11 +474,11 @@ public class XSQLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(60);
+			setState(64);
 			match(T__6);
-			setState(61);
+			setState(65);
 			match(FLOAT);
-			setState(62);
+			setState(66);
 			sqlBlock();
 			}
 		}
@@ -504,7 +520,7 @@ public class XSQLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(64);
+			setState(68);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__7) | (1L << T__8) | (1L << T__9) | (1L << T__10) | (1L << T__11))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -558,23 +574,23 @@ public class XSQLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(66);
-			match(T__3);
 			setState(70);
+			match(T__3);
+			setState(74);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==SQL) {
 				{
 				{
-				setState(67);
+				setState(71);
 				match(SQL);
 				}
 				}
-				setState(72);
+				setState(76);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(73);
+			setState(77);
 			match(T__4);
 			}
 		}
@@ -620,17 +636,17 @@ public class XSQLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(76); 
+			setState(80); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(75);
+				setState(79);
 				match(ID);
 				}
 				}
-				setState(78); 
+				setState(82); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==ID );
@@ -648,26 +664,28 @@ public class XSQLParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\27S\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\3\2\3\2\3\2"+
-		"\5\2\30\n\2\3\2\7\2\33\n\2\f\2\16\2\36\13\2\3\2\3\2\3\3\3\3\3\3\3\3\3"+
-		"\4\3\4\3\4\3\4\3\5\3\5\3\5\7\5-\n\5\f\5\16\5\60\13\5\3\5\3\5\3\6\5\6\65"+
-		"\n\6\3\6\3\6\6\69\n\6\r\6\16\6:\3\6\3\6\3\7\3\7\3\7\3\7\3\b\3\b\3\t\3"+
-		"\t\7\tG\n\t\f\t\16\tJ\13\t\3\t\3\t\3\n\6\nO\n\n\r\n\16\nP\3\n\2\2\13\2"+
-		"\4\6\b\n\f\16\20\22\2\3\3\2\n\16\2P\2\24\3\2\2\2\4!\3\2\2\2\6%\3\2\2\2"+
-		"\b)\3\2\2\2\n\64\3\2\2\2\f>\3\2\2\2\16B\3\2\2\2\20D\3\2\2\2\22N\3\2\2"+
-		"\2\24\25\5\4\3\2\25\27\5\6\4\2\26\30\5\b\5\2\27\26\3\2\2\2\27\30\3\2\2"+
-		"\2\30\34\3\2\2\2\31\33\5\n\6\2\32\31\3\2\2\2\33\36\3\2\2\2\34\32\3\2\2"+
-		"\2\34\35\3\2\2\2\35\37\3\2\2\2\36\34\3\2\2\2\37 \7\2\2\3 \3\3\2\2\2!\""+
-		"\7\25\2\2\"#\5\16\b\2#$\7\3\2\2$\5\3\2\2\2%&\7\4\2\2&\'\5\22\n\2\'(\5"+
-		"\20\t\2(\7\3\2\2\2)*\7\5\2\2*.\7\6\2\2+-\5\f\7\2,+\3\2\2\2-\60\3\2\2\2"+
-		".,\3\2\2\2./\3\2\2\2/\61\3\2\2\2\60.\3\2\2\2\61\62\7\7\2\2\62\t\3\2\2"+
-		"\2\63\65\5\16\b\2\64\63\3\2\2\2\64\65\3\2\2\2\65\66\3\2\2\2\668\7\b\2"+
-		"\2\679\7\21\2\28\67\3\2\2\29:\3\2\2\2:8\3\2\2\2:;\3\2\2\2;<\3\2\2\2<="+
-		"\5\20\t\2=\13\3\2\2\2>?\7\t\2\2?@\7\27\2\2@A\5\20\t\2A\r\3\2\2\2BC\t\2"+
-		"\2\2C\17\3\2\2\2DH\7\6\2\2EG\7\17\2\2FE\3\2\2\2GJ\3\2\2\2HF\3\2\2\2HI"+
-		"\3\2\2\2IK\3\2\2\2JH\3\2\2\2KL\7\7\2\2L\21\3\2\2\2MO\7\21\2\2NM\3\2\2"+
-		"\2OP\3\2\2\2PN\3\2\2\2PQ\3\2\2\2Q\23\3\2\2\2\t\27\34.\64:HP";
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\27W\4\2\t\2\4\3\t"+
+		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\3\2\5\2\26"+
+		"\n\2\3\2\5\2\31\n\2\3\2\5\2\34\n\2\3\2\7\2\37\n\2\f\2\16\2\"\13\2\3\2"+
+		"\3\2\3\3\3\3\3\3\3\3\3\4\3\4\3\4\3\4\3\5\3\5\3\5\7\5\61\n\5\f\5\16\5\64"+
+		"\13\5\3\5\3\5\3\6\5\69\n\6\3\6\3\6\6\6=\n\6\r\6\16\6>\3\6\3\6\3\7\3\7"+
+		"\3\7\3\7\3\b\3\b\3\t\3\t\7\tK\n\t\f\t\16\tN\13\t\3\t\3\t\3\n\6\nS\n\n"+
+		"\r\n\16\nT\3\n\2\2\13\2\4\6\b\n\f\16\20\22\2\3\3\2\n\16\2V\2\25\3\2\2"+
+		"\2\4%\3\2\2\2\6)\3\2\2\2\b-\3\2\2\2\n8\3\2\2\2\fB\3\2\2\2\16F\3\2\2\2"+
+		"\20H\3\2\2\2\22R\3\2\2\2\24\26\5\4\3\2\25\24\3\2\2\2\25\26\3\2\2\2\26"+
+		"\30\3\2\2\2\27\31\5\6\4\2\30\27\3\2\2\2\30\31\3\2\2\2\31\33\3\2\2\2\32"+
+		"\34\5\b\5\2\33\32\3\2\2\2\33\34\3\2\2\2\34 \3\2\2\2\35\37\5\n\6\2\36\35"+
+		"\3\2\2\2\37\"\3\2\2\2 \36\3\2\2\2 !\3\2\2\2!#\3\2\2\2\" \3\2\2\2#$\7\2"+
+		"\2\3$\3\3\2\2\2%&\7\25\2\2&\'\5\16\b\2\'(\7\3\2\2(\5\3\2\2\2)*\7\4\2\2"+
+		"*+\5\22\n\2+,\5\20\t\2,\7\3\2\2\2-.\7\5\2\2.\62\7\6\2\2/\61\5\f\7\2\60"+
+		"/\3\2\2\2\61\64\3\2\2\2\62\60\3\2\2\2\62\63\3\2\2\2\63\65\3\2\2\2\64\62"+
+		"\3\2\2\2\65\66\7\7\2\2\66\t\3\2\2\2\679\5\16\b\28\67\3\2\2\289\3\2\2\2"+
+		"9:\3\2\2\2:<\7\b\2\2;=\7\21\2\2<;\3\2\2\2=>\3\2\2\2><\3\2\2\2>?\3\2\2"+
+		"\2?@\3\2\2\2@A\5\20\t\2A\13\3\2\2\2BC\7\t\2\2CD\7\27\2\2DE\5\20\t\2E\r"+
+		"\3\2\2\2FG\t\2\2\2G\17\3\2\2\2HL\7\6\2\2IK\7\17\2\2JI\3\2\2\2KN\3\2\2"+
+		"\2LJ\3\2\2\2LM\3\2\2\2MO\3\2\2\2NL\3\2\2\2OP\7\7\2\2P\21\3\2\2\2QS\7\21"+
+		"\2\2RQ\3\2\2\2ST\3\2\2\2TR\3\2\2\2TU\3\2\2\2U\23\3\2\2\2\13\25\30\33 "+
+		"\628>LT";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

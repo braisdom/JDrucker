@@ -1,10 +1,10 @@
 package org.braisdom.drucker;
 
 import org.braisdom.drucker.annotation.TableColumn;
-import org.braisdom.drucker.database.AbstractTable;
-import org.braisdom.drucker.database.GenericEntity;
+import org.braisdom.drucker.database.AbstractTableRow;
+import org.braisdom.drucker.database.TableBehavior;
 
-public abstract class ActiveRecord<T> extends GenericEntity implements AbstractTable<T> {
+public abstract class ActiveRecord<T> extends AbstractTableRow implements TableBehavior<T> {
 
     @TableColumn(value = "id", updatable = false)
     private Integer id;

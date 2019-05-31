@@ -1,8 +1,6 @@
-package org.braisdom.drucker;
+package org.braisdom.drucker.xsql;
 
-import org.braisdom.drucker.xsql.XSQLDeclarations;
-import org.braisdom.drucker.xsql.XSQLDeclarations.*;
-import org.braisdom.drucker.xsql.XSQLSyntaxError;
+import org.braisdom.drucker.xsql.XSQLDefinition.XSQLDeclaration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,7 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class XSQLDeclarationsTest {
+public class XSQLDefinitionTest {
 
     @Test
     public void testDialectDeclSucc() throws IOException {
@@ -18,7 +16,7 @@ public class XSQLDeclarationsTest {
                 "initialize users {\n" +
                 "} ";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        XSQLDeclaration xsqlDeclaration = XSQLDeclarations.parse(inputStream);
+        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(inputStream);
         Assert.assertTrue("mysql".equals(xsqlDeclaration.getDialect()));
     }
 
@@ -29,7 +27,7 @@ public class XSQLDeclarationsTest {
                     "initialize users {\n" +
                     "} ";
             InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-            XSQLDeclaration xsqlDeclaration = XSQLDeclarations.parse(inputStream);
+            XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(inputStream);
             Assert.assertFalse("mysql".equals(xsqlDeclaration.getDialect()));
         } catch (Exception ex) {
             Assert.assertEquals(XSQLSyntaxError.class, ex.getClass());
@@ -44,9 +42,9 @@ public class XSQLDeclarationsTest {
                 "  CREATE TABLE ( ); \n" +
                 "} ";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        XSQLDeclaration xsqlDeclaration = XSQLDeclarations.parse(inputStream);
+        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(inputStream);
         Assert.assertEquals(xsqlDeclaration.getInitializeDeclaration().getTableName(), "users");
-        Assert.assertTrue(xsqlDeclaration.getInitializeDeclaration().getSqlStatements().size() > 0);
+        Assert.assertTrue(xsqlDeclaration.getInitializeDeclaration().getSqlStatements().size() == 1);
     }
 
     @Test
@@ -60,8 +58,9 @@ public class XSQLDeclarationsTest {
                 " } \n" +
                 "}";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        XSQLDeclaration xsqlDeclaration = XSQLDeclarations.parse(inputStream);
-        Assert.assertTrue(xsqlDeclaration.getMigrations().getMigrations().size() > 0);
+        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(inputStream);
+        Assert.assertTrue(xsqlDeclaration.getMigrations().getMigrations().size() == 1);
+        Assert.assertTrue(xsqlDeclaration.getMigrations().getMigrations().get(0).getSqlStatements().size() == 2);
     }
 
     @Test
@@ -73,7 +72,8 @@ public class XSQLDeclarationsTest {
                 "  SELECT * FROM users;" +
                 "}";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        XSQLDeclaration xsqlDeclaration = XSQLDeclarations.parse(inputStream);
-        Assert.assertTrue(xsqlDeclaration.getSqlStatements().size() > 0);
+        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(inputStream);
+        Assert.assertTrue(xsqlDeclaration.getSqlStatements().size() == 1);
+        Assert.assertTrue(xsqlDeclaration.getSqlStatements().get(0).getSqlStatements().size() == 1);
     }
 }

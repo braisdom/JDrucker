@@ -8,13 +8,16 @@ import java.util.List;
 
 public interface DatabaseSession {
 
-    public EntityAdapter executeQuery(Class<?> tableClass, Class<?> declaringClass,
-                                      SQL sql, SQLParameter[] sqlParameters) throws SQLException, XSQLParsingException;
+    TableRow executeQuery(Class<?> tableClass, Class<? extends TableRow> tableRowClass,
+                          SQL sql, SQLParameter[] sqlParameters)
+            throws SQLException, XSQLParsingException;
 
-    public List<EntityAdapter> executeQueryMany(Class<?> tableClass, Class<?> declaringClass,
-                                                SQL sql, SQLParameter[] sqlParameters) throws SQLException, XSQLParsingException;
+    List<TableRow> executeQueryMany(Class<?> tableClass, Class<? extends TableRow> tableRowClass,
+                                    SQL sql, SQLParameter[] sqlParameters)
+            throws SQLException, XSQLParsingException;
 
-    public int executeUpdate(Class<?> tableClass, Class<?> declaringClass, SQL sql,
-                             SQLParameter[] sqlParameters) throws SQLException;
+    int executeUpdate(Class<?> tableClass, Class<? extends TableRow> tableRowClass,
+                      SQL sql, SQLParameter[] sqlParameters)
+            throws SQLException;
 
 }

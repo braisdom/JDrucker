@@ -13,5 +13,8 @@ public @interface SQL {
 
     String id();
 
+    boolean primitive() default false;
+
     SQLExecutionType executionType();
+
 }

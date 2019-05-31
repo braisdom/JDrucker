@@ -58,11 +58,6 @@ public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
             return columnMetaDataMap.get(columnName);
         }
 
-        @Override
-        public Class<?> getEntityBeanClass() {
-            return tableClass;
-        }
-
         private List<String> prepareColumnMetaData() throws SQLException {
             int columnCount = resultSetMetaData.getColumnCount();
             List<String> columnMetaDatas = new ArrayList<>();
