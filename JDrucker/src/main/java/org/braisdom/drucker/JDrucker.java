@@ -5,11 +5,8 @@ import org.braisdom.drucker.database.TableBehavior;
 import org.braisdom.drucker.database.DatabaseSession;
 import org.braisdom.drucker.database.TableBehaviorProxy;
 import org.braisdom.drucker.database.TableRow;
-import org.braisdom.drucker.xsql.XSQLCache;
-import org.braisdom.drucker.xsql.XSQLDefinition;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -80,7 +77,7 @@ public class JDrucker {
     }
 
     private static void cacheFile(String cacheName, File xsqlFile) throws IOException {
-        XSQLCache.cacheXSQLDeclaration(cacheName, XSQLDefinition.parse(new FileInputStream(xsqlFile)));
+//        XSQLCache.cacheXSQLDeclaration(cacheName, XSQLDefinition.getXSQLDeclaration(new FileInputStream(xsqlFile)));
     }
 
 }

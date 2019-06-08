@@ -3,6 +3,7 @@ package org.braisdom.drucker.xsql;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.braisdom.drucker.WordUtil;
 import org.jparsec.*;
 import org.jparsec.pattern.Patterns;
 
@@ -110,13 +111,11 @@ public final class XSQLParser {
                                      String sqlId,
                                      Class<?> tableClass,
                                      Map<String, Object> dataModel) throws XSQLParsingException {
-        Objects.requireNonNull(fileName, "xsql file cannot be null");
-        Objects.requireNonNull(sqlId, "sqlId cannot be null");
         Objects.requireNonNull(dataModel, "dataModel cannot be null");
 
-        if (fileName.length() == 0)
+        if (WordUtil.isEmpty(fileName))
             throw new XSQLParsingException("xsql file is blank");
-        if (sqlId.length() == 0)
+        if (WordUtil.isEmpty(sqlId))
             throw new XSQLParsingException("sqlId is blank");
 
         try {

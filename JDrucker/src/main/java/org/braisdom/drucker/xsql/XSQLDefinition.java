@@ -9,18 +9,13 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class XSQLDefinition extends XSQLBaseListener {
 
-    public static final String DIALECT_MYSQL = "mysql";
-    public static final String DIALECT_SQLITE = "sqlite";
-
     public static class XSQLDeclaration {
         private String dialect;
-        private InitializeDeclaration initializeDeclaration;
+        private Initialize initialize;
         private Migrations migrations;
         private List<Sql> sqlStatements = new ArrayList<>();
 
@@ -32,12 +27,12 @@ public class XSQLDefinition extends XSQLBaseListener {
             this.dialect = dialect;
         }
 
-        public InitializeDeclaration getInitializeDeclaration() {
-            return initializeDeclaration;
+        public Initialize getInitialize() {
+            return initialize;
         }
 
-        public void setInitializeDeclaration(InitializeDeclaration initializeDeclaration) {
-            this.initializeDeclaration = initializeDeclaration;
+        public void setInitialize(Initialize initialize) {
+            this.initialize = initialize;
         }
 
         public Migrations getMigrations() {
@@ -57,7 +52,7 @@ public class XSQLDefinition extends XSQLBaseListener {
         }
     }
 
-    public static class InitializeDeclaration extends SqlStatementContainer {
+    public static class Initialize extends SqlStatementContainer {
         private String tableName;
         private List<String> sqlStatements = new ArrayList<>();
 
@@ -77,7 +72,7 @@ public class XSQLDefinition extends XSQLBaseListener {
             return migrations;
         }
 
-        public void aaMigration(Migration migration) {
+        public void addMigration(Migration migration) {
             this.migrations.add(migration);
         }
     }
@@ -115,7 +110,7 @@ public class XSQLDefinition extends XSQLBaseListener {
         }
     }
 
-    static class SqlStatementContainer {
+    public static class SqlStatementContainer {
         private List<String> sqlStatements = new ArrayList<>();
 
         public List<String> getSqlStatements() {
@@ -147,48 +142,63 @@ public class XSQLDefinition extends XSQLBaseListener {
         InitDeclContext initDeclContext = ctx.initDecl();
         MigrationsDeclContext migrationsDeclContext = ctx.migrationsDecl();
         List<SqlDeclContext> sqlDeclContexts = ctx.sqlDecl();
+
         if (dialectContext != null) {
             if (dialectContext.dialectOption() != null)
                 xsqlDeclaration.setDialect(dialectContext.dialectOption().getText());
         }
 
-        if(initDeclContext != null) {
-            InitializeDeclaration initializeDeclaration = new InitializeDeclaration();
-            initializeDeclaration.setTableName(initDeclContext.tableName().getText());
+        if (initDeclContext != null) {
+            Initialize initialize = new Initialize();
+            initialize.setTableName(initDeclContext.tableName().getText());
             List<TerminalNode> sqls = initDeclContext.sqlBlock().SQL();
-            for(TerminalNode sql : sqls)
-                initializeDeclaration.addSqlStatement(sql.getText());
-            xsqlDeclaration.setInitializeDeclaration(initializeDeclaration);
+            for (TerminalNode sql : sqls)
+                initialize.addSqlStatement(sql.getText());
+            xsqlDeclaration.setInitialize(initialize);
         }
 
-        if(migrationsDeclContext != null) {
+        if (migrationsDeclContext != null) {
             Migrations migrations = new Migrations();
             List<MigrationsVersionDeclContext> migrationsVersionDeclContexts = ctx.migrationsDecl().migrationsVersionDecl();
 
-            for(MigrationsVersionDeclContext migrationsVersionDeclContext : migrationsVersionDeclContexts) {
+            for (MigrationsVersionDeclContext migrationsVersionDeclContext : migrationsVersionDeclContexts) {
                 Migration migration = new Migration();
                 List<TerminalNode> sqls = migrationsVersionDeclContext.sqlBlock().SQL();
                 TerminalNode version = migrationsVersionDeclContext.FLOAT();
                 migration.setVersion(Float.valueOf(version.getText()));
-                for(TerminalNode sql : sqls)
+                for (TerminalNode sql : sqls)
                     migration.addSqlStatement(sql.getText());
-                migrations.aaMigration(migration);
+                migrations.addMigration(migration);
             }
 
             xsqlDeclaration.setMigrations(migrations);
         }
 
-        for(SqlDeclContext sqlDeclContext : sqlDeclContexts) {
+        for (SqlDeclContext sqlDeclContext : sqlDeclContexts) {
             Sql sql = new Sql();
             List<TerminalNode> rawSqls = sqlDeclContext.sqlBlock().SQL();
             sql.setDialect(sqlDeclContext.dialectOption().getText());
-            for(TerminalNode rawSql : rawSqls)
+            for (TerminalNode rawSql : rawSqls)
                 sql.addSqlStatement(rawSql.getText());
             xsqlDeclaration.addSqlStatement(sql);
         }
     }
 
-    public static XSQLDeclaration parse(InputStream inputStream) throws IOException {
+    public static XSQLDeclaration parse(String fileName) throws IOException {
+        Objects.requireNonNull(fileName, "The fileName cannot be null");
+        return parse(fileName, XSQLDefinition.class.getClassLoader());
+    }
+
+    public static XSQLDeclaration parse(String fileName, ClassLoader classLoader) throws IOException {
+        Objects.requireNonNull(fileName, "The fileName cannot be null");
+        Objects.requireNonNull(classLoader, "The classLoader cannot be null");
+        return parse(fileName, classLoader.getResourceAsStream(fileName));
+    }
+
+    public static XSQLDeclaration parse(String fileName, InputStream inputStream) throws IOException {
+        Objects.requireNonNull(fileName, "The fileName cannot be null");
+        Objects.requireNonNull(inputStream, "The inputStream cannot be null");
+
         CharStream charStream = CharStreams.fromStream(inputStream);
         XSQLLexer xsqlLexer = new XSQLLexer((charStream));
         CommonTokenStream commonStream = new CommonTokenStream(xsqlLexer);
@@ -197,6 +207,7 @@ public class XSQLDefinition extends XSQLBaseListener {
 
         xsqlParser.addErrorListener(new XSQLErrorListener());
         xsqlParser.xsqlDecl().enterRule(xsqlDefinition);
+
         return xsqlDefinition.xsqlDeclaration;
     }
 }

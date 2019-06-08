@@ -35,8 +35,9 @@ public class DefaultDatabaseSession implements DatabaseSession {
 
     @Override
     public TableRow executeQuery(Class<?> tableClass, Class<? extends TableRow> tableRowClass,
-                                 SQL sql, SQLParameter[] sqlParameters) throws SQLException, XSQLParsingException {
-        Connection connection = databaseConnectionFactory.getConnection();
+                                 SQL sql, SQLParameter[] sqlParameters)
+            throws SQLException, XSQLParsingException, BeanReflectionException {
+        Connection connection = null;
         ResultSet resultSet = null;
         Statement statement = null;
         try {
@@ -47,6 +48,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
             XSQLContext xsqlContext = createXSqlContext(tableName, sqlParameters);
             String sqlStatement = XSQLParser.parse(fileName, sql.id(), tableClass, xsqlContext.toFreemarkContext());
 
+            connection = databaseConnectionFactory.getConnection();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(sqlStatement);
             // The resultSet is closed while the empty resultSet appeared
@@ -56,7 +58,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
             TableMetaData tableMetaData = getTableMetaData(tableClass, connection.getMetaData(),
                     resultSet.getMetaData());
 
-            return null;
+            return tableRowFactory.createTableRow(tableRowClass, tableMetaData, resultSet);
         } finally {
             close(statement, resultSet, connection);
         }
@@ -96,7 +98,7 @@ public class DefaultDatabaseSession implements DatabaseSession {
     private String getXsqlFileName(SQL sql, Table table, Class<?> tableClass) {
         if (sql.primitive())
             return TableBehavior.class.getAnnotation(Table.class).file();
-        else if(WordUtil.isEmpty(table.tableName()))
+        else if(WordUtil.isEmpty(table.file()))
             return "/xsql/" + WordUtil.tableize(tableClass.getSimpleName()) +".xsql";
         return table.file();
     }

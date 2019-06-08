@@ -25,14 +25,12 @@ public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
         private final String[] columnNames;
 
         private final Table tableAnnotation;
-        private final Class<?> tableClass;
         private final DatabaseMetaData databaseMetaData;
         private final ResultSetMetaData resultSetMetaData;
 
         public TableMetaDataImpl(Class<?> tableClass,
                                  DatabaseMetaData databaseMetaData,
                                  ResultSetMetaData resultSetMetaData) throws SQLException {
-            this.tableClass = tableClass;
             this.databaseMetaData = databaseMetaData;
             this.resultSetMetaData = resultSetMetaData;
             this.tableAnnotation = tableClass.getAnnotation(Table.class);

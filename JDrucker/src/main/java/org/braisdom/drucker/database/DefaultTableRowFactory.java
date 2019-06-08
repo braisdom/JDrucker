@@ -22,8 +22,7 @@ public class DefaultTableRowFactory implements TableRowFactory {
                                    TableMetaData tableMetaData,
                                    ResultSet resultSet) throws SQLException, BeanReflectionException {
         Enhancer enhancer = new Enhancer();
-        TableRowImpl tableRowImpl = new TableRowImpl(tableRowClass, tableMetaData, resultSet);
-        TableRowProxy tableRowProxy = new TableRowProxy(tableRowImpl);
+        TableRowProxy tableRowProxy = new TableRowProxy(tableRowClass, tableMetaData, resultSet);
 
         enhancer.setSuperclass(tableRowClass);
         enhancer.setCallback(tableRowProxy);
@@ -31,24 +30,7 @@ public class DefaultTableRowFactory implements TableRowFactory {
         return tableRowClass.cast(enhancer.create());
     }
 
-    private static class TableRowProxy implements MethodInterceptor {
-
-        private final TableRowImpl tableRowImpl;
-
-        public TableRowProxy(TableRowImpl tableRowImpl) {
-            this.tableRowImpl = tableRowImpl;
-        }
-
-        @Override
-        public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-            if (method.getAnnotation(Proxied.class) == null)
-                return proxy.invokeSuper(obj, args);
-            return method.invoke(tableRowImpl, args);
-        }
-
-    }
-
-    private static class TableRowImpl extends AbstractTableRow {
+    private static class TableRowProxy extends AbstractTableRow implements MethodInterceptor {
 
         private static final Map<String, Map<String, PropertyDescriptor>> beanInfoMap = new HashMap<>();
 
@@ -57,19 +39,35 @@ public class DefaultTableRowFactory implements TableRowFactory {
         private final ResultSet resultSet;
         private final Map<String, Object> columnValueHolder;
 
-        public TableRowImpl(Class<? extends TableRow> tableRowClass,
-                            TableMetaData tableMetaData, ResultSet resultSet) throws SQLException, BeanReflectionException {
+        private boolean beanInfoProcessed;
+
+        public TableRowProxy(Class<? extends TableRow> tableRowClass,
+                             TableMetaData tableMetaData, ResultSet resultSet) throws SQLException, BeanReflectionException {
             this.tableRowClass = tableRowClass;
             this.tableMetaData = tableMetaData;
             this.resultSet = resultSet;
             this.columnValueHolder = new HashMap<>();
 
-            processRow();
+            this.beanInfoProcessed = false;
 
+            processRow();
+        }
+
+        @Override
+        public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+            if (method.getAnnotation(Proxied.class) == null)
+                return proxy.invokeSuper(obj, args);
+
+            // Process the bean properties lazily while the first no proxied method invoked.
             if (tableRowClass.getAnnotation(TableRowBean.class) != null) {
-                cacheBeanInfo(tableRowClass);
-                processBeanPropertyValue();
+                if (beanInfoMap.get(tableRowClass.getName()) == null)
+                    cacheBeanInfo(tableRowClass);
+
+                if(!beanInfoProcessed)
+                    processBeanPropertyValue(obj);
             }
+
+            return method.invoke(this, args);
         }
 
         @Override
@@ -82,7 +80,7 @@ public class DefaultTableRowFactory implements TableRowFactory {
             return columnValueHolder;
         }
 
-        private void processBeanPropertyValue() throws BeanReflectionException {
+        private void processBeanPropertyValue(Object bean) throws BeanReflectionException {
             Map<String, PropertyDescriptor> propertyDescriptorMap = beanInfoMap.get(tableRowClass.getName());
             if (propertyDescriptorMap != null) {
                 for (Map.Entry<String, Object> entry : columnValueHolder.entrySet()) {
@@ -91,32 +89,30 @@ public class DefaultTableRowFactory implements TableRowFactory {
                     if (propertyDescriptor != null) {
                         try {
                             Object propertyValue = columnValueHolder.get(entry.getKey());
-                            propertyDescriptor.getWriteMethod().invoke(this, propertyValue);
+                            propertyDescriptor.getWriteMethod().invoke(bean, propertyValue);
                         } catch (Exception ex) {
                             throw new BeanReflectionException(ex.getMessage(), ex);
                         }
                     }
                 }
+                beanInfoProcessed = true;
             }
         }
 
-        private void cacheBeanInfo(Class<? extends TableRow> tableRowClass) throws BeanReflectionException {
+        private synchronized void cacheBeanInfo(Class<? extends TableRow> tableRowClass) throws BeanReflectionException {
             try {
-                String className = tableRowClass.getName();
-                if (beanInfoMap.get(className) == null) {
-                    Map<String, PropertyDescriptor> propertyDescriptorMap = new HashMap<>();
-                    BeanInfo beanInfo = Introspector.getBeanInfo(tableRowClass);
-                    PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-                    for (PropertyDescriptor propertyDescriptor : propertyDescriptors)
-                        propertyDescriptorMap.put(propertyDescriptor.getName(), propertyDescriptor);
-                    beanInfoMap.put(className, propertyDescriptorMap);
-                }
+                Map<String, PropertyDescriptor> propertyDescriptorMap = new HashMap<>();
+                BeanInfo beanInfo = Introspector.getBeanInfo(tableRowClass);
+                PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+                for (PropertyDescriptor propertyDescriptor : propertyDescriptors)
+                    propertyDescriptorMap.put(propertyDescriptor.getName(), propertyDescriptor);
+                beanInfoMap.put(tableRowClass.getName(), propertyDescriptorMap);
             } catch (IntrospectionException ex) {
                 throw new BeanReflectionException(ex.getMessage(), ex);
             }
         }
 
-        private void processRow() throws SQLException {
+        private synchronized void processRow() throws SQLException {
             String[] columnNames = tableMetaData.getColumnNames();
             for (String columnName : columnNames) {
                 TableMetaData.ColumnMetaData columnMetaData = tableMetaData.getColumnMetaData(columnName);

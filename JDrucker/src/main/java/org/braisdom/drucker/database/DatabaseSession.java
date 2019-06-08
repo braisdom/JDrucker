@@ -10,7 +10,7 @@ public interface DatabaseSession {
 
     TableRow executeQuery(Class<?> tableClass, Class<? extends TableRow> tableRowClass,
                           SQL sql, SQLParameter[] sqlParameters)
-            throws SQLException, XSQLParsingException;
+            throws SQLException, XSQLParsingException, BeanReflectionException;
 
     List<TableRow> executeQueryMany(Class<?> tableClass, Class<? extends TableRow> tableRowClass,
                                     SQL sql, SQLParameter[] sqlParameters)
