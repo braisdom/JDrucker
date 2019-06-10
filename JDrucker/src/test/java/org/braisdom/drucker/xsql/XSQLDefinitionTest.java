@@ -10,15 +10,13 @@ import java.io.InputStream;
 
 public class XSQLDefinitionTest {
 
-    private String mockFileName = "xsql/mock.xsql";
-
     @Test
     public void testDialectDeclSucc() throws IOException {
         String input = "dialect: mysql;\n" +
                 "initialize users {\n" +
                 "} ";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(mockFileName, inputStream);
+        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(inputStream);
         Assert.assertTrue("mysql".equals(xsqlDeclaration.getDialect()));
     }
 
@@ -29,7 +27,7 @@ public class XSQLDefinitionTest {
                     "initialize users {\n" +
                     "} ";
             InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-            XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(mockFileName, inputStream);
+            XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(inputStream);
             Assert.assertFalse("mysql".equals(xsqlDeclaration.getDialect()));
         } catch (Exception ex) {
             Assert.assertEquals(XSQLSyntaxError.class, ex.getClass());
@@ -44,7 +42,7 @@ public class XSQLDefinitionTest {
                 "  CREATE TABLE ( ); \n" +
                 "} ";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(mockFileName, inputStream);
+        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(inputStream);
         Assert.assertEquals(xsqlDeclaration.getInitialize().getTableName(), "users");
         Assert.assertTrue(xsqlDeclaration.getInitialize().getSqlStatements().size() == 1);
     }
@@ -60,7 +58,7 @@ public class XSQLDefinitionTest {
                 " } \n" +
                 "}";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(mockFileName, inputStream);
+        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(inputStream);
         Assert.assertTrue(xsqlDeclaration.getMigrations().getMigrations().size() == 1);
         Assert.assertTrue(xsqlDeclaration.getMigrations().getMigrations().get(0).getSqlStatements().size() == 2);
     }
@@ -74,7 +72,7 @@ public class XSQLDefinitionTest {
                 "  SELECT * FROM users;" +
                 "}";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());
-        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(mockFileName, inputStream);
+        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse(inputStream);
         Assert.assertTrue(xsqlDeclaration.getSqlStatements().size() == 1);
         Assert.assertTrue(xsqlDeclaration.getSqlStatements().get(0).getSqlStatements().size() == 1);
     }

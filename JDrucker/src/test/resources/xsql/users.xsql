@@ -1,6 +1,6 @@
 # users table definition
 
-dialect: sqlite;
+dialect: mysql;
 
 initialize users {
     CREATE TABLE `users` (
@@ -13,7 +13,7 @@ initialize users {
 
 migrations {
     # All a new column 'name' for users
-    version 1.0 {
+    version 0.1 {
         ALTER TABLE `users` ADD COLUMN `name`;
     }
 }

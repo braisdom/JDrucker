@@ -24,7 +24,7 @@ public class JDruckerAutoConfiguration implements ApplicationContextAware {
     @ConditionalOnBean(DataSource.class)
     public DatabaseSession databaseSession(DataSource dataSource) {
         return new DefaultDatabaseSession(new DefaultDatabaseConnectionFactory(dataSource),
-                new DefaultTableMetaDataFactory(), new DefaultRowAdapterFactory());
+                new DefaultTableMetaDataFactory(), new DefaultTableRowFactory());
     }
 
     @Override

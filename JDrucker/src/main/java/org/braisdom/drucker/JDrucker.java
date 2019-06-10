@@ -1,28 +1,33 @@
 package org.braisdom.drucker;
 
 import net.sf.cglib.proxy.Enhancer;
-import org.braisdom.drucker.database.TableBehavior;
 import org.braisdom.drucker.database.DatabaseSession;
+import org.braisdom.drucker.database.TableBehavior;
 import org.braisdom.drucker.database.TableBehaviorProxy;
 import org.braisdom.drucker.database.TableRow;
+import org.braisdom.drucker.xsql.XSQLDefinition;
+import org.braisdom.drucker.xsql.XSQLException;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class JDrucker {
 
     public static final String DEFAULT_XSQL_PATH = "xsql";
 
+    private static final String SCHEMA_MIGRATIONS_SQL = "xsql/schema_migrations.xsql";
+
+    private static Map<String, XSQLDefinition.XSQLDeclaration> xsqlDeclarationCache = new HashMap<>();
+
     static {
         try {
             ClassLoader classLoader = JDrucker.class.getClassLoader();
-            cacheFile("/xsql/schema_migrations_table.xsql", new File(classLoader.getResource("xsql/schema_migrations_table.xsql").getPath()));
+            cacheFile(SCHEMA_MIGRATIONS_SQL, new File(classLoader.getResource(SCHEMA_MIGRATIONS_SQL).getPath()));
         } catch (IOException e) {
-            // Ignore
+            throw new XSQLException(e.getMessage(), e);
         }
     }
 
@@ -47,37 +52,47 @@ public class JDrucker {
     }
 
     public static void initializeTable(String xsqlFilePath, int threadCount) throws IOException {
-        cacheXsqlIfNecessary(xsqlFilePath);
+
     }
 
     public static void migrate(String xsqlFilePath, int threadCount) throws IOException {
-        cacheXsqlIfNecessary(xsqlFilePath);
+
     }
 
-    public static void cacheXsqlIfNecessary(String xsqlFilePath) throws IOException {
+    public static void loadXsqlFile(String xsqlFilePath) throws IOException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null)
             classLoader = JDrucker.class.getClassLoader();
         URL url = classLoader.getResource(xsqlFilePath);
         List<String> cacheNameSegments = new ArrayList<>();
 
-        cacheNameSegments.add("/" + xsqlFilePath);
+        cacheNameSegments.add(xsqlFilePath);
+
         traverseXsqlFiles(cacheNameSegments, new File(url.getPath()).listFiles());
+    }
+
+    public static XSQLDefinition.XSQLDeclaration getXSQLDeclaration(String xsqlFileName) {
+        return xsqlDeclarationCache.get(xsqlFileName);
     }
 
     private static void traverseXsqlFiles(List<String> cacheNameSegments, File[] xsqlFiles) throws IOException {
         for (File xsqlFile : xsqlFiles) {
-            cacheNameSegments.add(xsqlFile.getName());
             if (xsqlFile.isDirectory()) {
-                traverseXsqlFiles(cacheNameSegments, xsqlFile.listFiles());
+                List<String> tempCacheNameSegments = new ArrayList<>();
+                tempCacheNameSegments.addAll(cacheNameSegments);
+                tempCacheNameSegments.add(xsqlFile.getName());
+                traverseXsqlFiles(tempCacheNameSegments, xsqlFile.listFiles());
             } else {
-                cacheFile(String.join(File.separator, cacheNameSegments.toArray(new String[]{})), xsqlFile);
+                String path = String.join(File.separator, cacheNameSegments.toArray(new String[]{}));
+                cacheFile(String.format("%s/%s", path, xsqlFile.getName()), xsqlFile);
             }
         }
     }
 
     private static void cacheFile(String cacheName, File xsqlFile) throws IOException {
-//        XSQLCache.cacheXSQLDeclaration(cacheName, XSQLDefinition.getXSQLDeclaration(new FileInputStream(xsqlFile)));
+        if(xsqlDeclarationCache.get(cacheName) != null)
+            throw new XSQLException("Duplicated xslq file: " + cacheName);
+        xsqlDeclarationCache.put(cacheName, XSQLDefinition.parse(new FileInputStream(xsqlFile)));
     }
 
 }

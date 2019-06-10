@@ -1,6 +1,6 @@
 package org.braisdom.drucker.xsql;
 
-public class XSQLParsingException extends Exception {
+public class XSQLParsingException extends XSQLException {
     public XSQLParsingException() {
     }
 

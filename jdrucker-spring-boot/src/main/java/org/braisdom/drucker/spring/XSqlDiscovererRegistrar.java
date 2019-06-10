@@ -47,7 +47,6 @@ public class XSqlDiscovererRegistrar implements ImportBeanDefinitionRegistrar, R
                     definition.setBeanClass(TableFactoryBean.class);
                     definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE
                             | AbstractBeanDefinition.AUTOWIRE_CONSTRUCTOR);
-                    definition.setLazyInit(true);
                 }
                 return beanDefinitionHolders;
             }
