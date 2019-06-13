@@ -39,4 +39,12 @@ public class MigrationRunner implements CommandLineRunner, ExitCodeGenerator {
     public int getExitCode() {
         return 0;
     }
+
+    private void initializeTables() {
+
+    }
+
+    private void migrate() {
+
+    }
 }

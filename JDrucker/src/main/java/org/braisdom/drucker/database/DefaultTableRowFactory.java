@@ -20,7 +20,7 @@ public class DefaultTableRowFactory implements TableRowFactory {
     @Override
     public TableRow createTableRow(Class<? extends TableRow> tableRowClass,
                                    TableMetaData tableMetaData,
-                                   ResultSet resultSet) throws SQLException, BeanReflectionException {
+                                   ResultSet resultSet) throws SQLException {
         Enhancer enhancer = new Enhancer();
         TableRowProxy tableRowProxy = new TableRowProxy(tableRowClass, tableMetaData, resultSet);
 
@@ -42,12 +42,12 @@ public class DefaultTableRowFactory implements TableRowFactory {
         private boolean beanInfoProcessed;
 
         public TableRowProxy(Class<? extends TableRow> tableRowClass,
-                             TableMetaData tableMetaData, ResultSet resultSet) throws SQLException, BeanReflectionException {
+                             TableMetaData tableMetaData, ResultSet resultSet) throws SQLException {
             this.tableRowClass = tableRowClass;
             this.tableMetaData = tableMetaData;
             this.resultSet = resultSet;
-            this.columnValueHolder = new HashMap<>();
 
+            this.columnValueHolder = new HashMap<>();
             this.beanInfoProcessed = false;
 
             processRow();
@@ -58,7 +58,7 @@ public class DefaultTableRowFactory implements TableRowFactory {
             if (method.getAnnotation(Proxied.class) == null)
                 return proxy.invokeSuper(obj, args);
 
-            // Process the bean properties lazily while the first no proxied method invoked.
+            // Process the bean properties lazily while the first unproxied method invoked.
             if (tableRowClass.getAnnotation(TableRowBean.class) != null) {
                 if (beanInfoMap.get(tableRowClass.getName()) == null)
                     cacheBeanInfo(tableRowClass);
