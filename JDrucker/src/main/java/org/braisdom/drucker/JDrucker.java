@@ -6,13 +6,20 @@ import org.braisdom.drucker.database.TableBehavior;
 import org.braisdom.drucker.database.TableBehaviorProxy;
 import org.braisdom.drucker.database.TableRow;
 import org.braisdom.drucker.xsql.XSQLDefinition;
+import org.braisdom.drucker.xsql.XSQLDefinition.XSQLDeclaration;
 import org.braisdom.drucker.xsql.XSQLException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class JDrucker {
 
@@ -20,7 +27,8 @@ public class JDrucker {
 
     private static final String SCHEMA_MIGRATIONS_SQL = "xsql/schema_migrations.xsql";
 
-    private static Map<String, XSQLDefinition.XSQLDeclaration> xsqlDeclarationCache = new HashMap<>();
+    private static final Map<String, XSQLDeclaration> xsqlDeclarationCache = new HashMap<>();
+    private static final int DEFAULT_THREAD_COUNT = 50;
 
     static {
         try {
@@ -47,12 +55,33 @@ public class JDrucker {
         return tableClass.cast(enhancer.create());
     }
 
-    public static void initializeTable() throws IOException {
-        initializeTable(DEFAULT_XSQL_PATH, -1);
+    public static void initializeTable(Collection<XSQLDeclaration> xsqlDeclarations,
+                                       DatabaseSession databaseSession) {
+        initializeTable(xsqlDeclarations, databaseSession, DEFAULT_THREAD_COUNT);
     }
 
-    public static void initializeTable(String xsqlFilePath, int threadCount) throws IOException {
-
+    public static void initializeTable(Collection<XSQLDeclaration> xsqlDeclarations,
+                                       DatabaseSession databaseSession,
+                                       int threadCount) {
+        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        Connection connection = null;
+        try {
+            connection = databaseSession.getRawConnection();
+            connection.setAutoCommit(false);
+            List<Callable<Object>> callables = new ArrayList<>();
+            for (XSQLDeclaration xsqlDeclaration : xsqlDeclarations)
+                callables.add(new TableInitializerWorker(xsqlDeclaration, connection));
+            executorService.invokeAll(callables);
+            connection.commit();
+            connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            throw new DatabaseSchemaException(e.getMessage(), e);
+        } catch (InterruptedException e) {
+            throw new DatabaseSchemaException(e.getMessage(), e);
+        } finally {
+            executorService.shutdown();
+            close(null, connection);
+        }
     }
 
     public static void migrate(String xsqlFilePath, int threadCount) throws IOException {
@@ -71,7 +100,11 @@ public class JDrucker {
         traverseXsqlFiles(cacheNameSegments, new File(url.getPath()).listFiles());
     }
 
-    public static XSQLDefinition.XSQLDeclaration getXSQLDeclaration(String xsqlFileName) {
+    public static Collection<XSQLDeclaration> getXsqlDeclaration() {
+        return xsqlDeclarationCache.values();
+    }
+
+    public static XSQLDeclaration getXSQLDeclaration(String xsqlFileName) {
         return xsqlDeclarationCache.get(xsqlFileName);
     }
 
@@ -90,9 +123,51 @@ public class JDrucker {
     }
 
     private static void cacheFile(String cacheName, File xsqlFile) throws IOException {
-        if(xsqlDeclarationCache.get(cacheName) != null)
+        if (xsqlDeclarationCache.get(cacheName) != null)
             throw new XSQLException("Duplicated xslq file: " + cacheName);
         xsqlDeclarationCache.put(cacheName, XSQLDefinition.parse(new FileInputStream(xsqlFile)));
+    }
+
+    private static void close(Statement statement, Connection connection) {
+        try {
+            if (statement != null)
+                statement.close();
+            if (connection != null)
+                connection.close();
+        } catch (SQLException ex) {
+            throw new DatabaseSchemaException(ex.getMessage(), ex);
+        }
+    }
+
+    private static class TableInitializerWorker implements Callable {
+
+        private final XSQLDeclaration xsqlDeclaration;
+        private final Connection connection;
+
+        public TableInitializerWorker(XSQLDeclaration xsqlDeclaration, Connection connection) {
+            this.xsqlDeclaration = xsqlDeclaration;
+            this.connection = connection;
+        }
+
+        @Override
+        public Object call() throws Exception {
+            Statement statement = null;
+            try {
+                XSQLDefinition.Initialize initialize = xsqlDeclaration.getInitialize();
+                if (initialize != null) {
+                    List<String> sqls = xsqlDeclaration.getInitialize().getSqlStatements();
+                    statement = connection.createStatement();
+                    for (String sql : sqls) {
+                        statement.execute(sql);
+                    }
+                }
+                return null;
+            } catch (Exception ex) {
+                throw new DatabaseSchemaException(ex.getMessage(), ex);
+            } finally {
+                close(statement, null);
+            }
+        }
     }
 
 }

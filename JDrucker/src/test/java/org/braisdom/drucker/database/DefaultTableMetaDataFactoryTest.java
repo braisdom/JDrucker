@@ -17,8 +17,6 @@ public class DefaultTableMetaDataFactoryTest extends AbstractTest {
         DatabaseMetaData databaseMetaData = mock(DatabaseMetaData.class);
         ResultSetMetaData resultSetMetaData = mock(ResultSetMetaData.class);
 
-        when(databaseMetaData.getDatabaseProductName()).thenReturn("mysql");
-
         when(resultSetMetaData.getColumnCount()).thenReturn(3);
         when(resultSetMetaData.getColumnName(1)).thenReturn("name");
         when(resultSetMetaData.getColumnName(2)).thenReturn("age");
@@ -28,7 +26,6 @@ public class DefaultTableMetaDataFactoryTest extends AbstractTest {
         TableMetaData tableMetaData = defaultTableMetaDataFactory.createTableMetaData(DemoTableTest.class,
                 databaseMetaData, resultSetMetaData);
 
-        Assert.assertTrue(tableMetaData.getDatabaseProductName().equals("mysql"));
         Assert.assertTrue(tableMetaData.getColumnNames().length == 3);
         Assert.assertTrue(tableMetaData.getColumnMetaData("name") != null);
     }

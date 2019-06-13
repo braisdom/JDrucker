@@ -34,6 +34,16 @@ public class DefaultDatabaseSession implements DatabaseSession {
     }
 
     @Override
+    public String getDatabaseProductName() throws SQLException {
+        return databaseConnectionFactory.getConnection().getMetaData().getDatabaseProductName();
+    }
+
+    @Override
+    public Connection getRawConnection() throws SQLException {
+        return databaseConnectionFactory.getConnection();
+    }
+
+    @Override
     public TableRow executeQuery(Class<?> tableClass, Class<? extends TableRow> tableRowClass,
                                  SQL sql, SQLParameter[] sqlParameters)
             throws SQLException, XSQLParsingException, BeanReflectionException {

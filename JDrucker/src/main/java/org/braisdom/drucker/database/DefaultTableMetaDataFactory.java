@@ -42,11 +42,6 @@ public class DefaultTableMetaDataFactory implements TableMetaDataFactory {
         }
 
         @Override
-        public String getDatabaseProductName() throws SQLException {
-            return databaseMetaData.getDatabaseProductName();
-        }
-
-        @Override
         public String[] getColumnNames() {
             return columnNames;
         }

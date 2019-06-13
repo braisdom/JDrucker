@@ -1,10 +1,6 @@
 package org.braisdom.drucker.database;
 
-import java.sql.SQLException;
-
 public interface TableMetaData {
-
-    String getDatabaseProductName() throws SQLException;
 
     String[] getColumnNames();
 

@@ -89,7 +89,6 @@ public class XSQLDefinition extends XSQLBaseListener {
 
     public static class Initialize extends SqlStatementContainer {
         private String tableName;
-        private List<String> sqlStatements = new ArrayList<>();
 
         public String getTableName() {
             return tableName;
