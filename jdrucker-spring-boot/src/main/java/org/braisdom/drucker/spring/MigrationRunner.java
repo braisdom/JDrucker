@@ -7,6 +7,10 @@ import org.springframework.boot.ExitCodeGenerator;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 
+import java.util.Collection;
+
+import org.braisdom.drucker.xsql.XSQLDefinition.XSQLDeclaration;
+
 public class MigrationRunner implements CommandLineRunner, ExitCodeGenerator {
 
     public static final String MIGRATION_INDICATOR = "migrate";
@@ -30,6 +34,11 @@ public class MigrationRunner implements CommandLineRunner, ExitCodeGenerator {
         if(args != null && args.length > 0) {
             String rawMigration = args[0];
             if(MIGRATION_INDICATOR.equals(rawMigration)) {
+                JDrucker.loadXsqlFile(xsqlPath);
+                Collection<XSQLDeclaration> xsqlDeclarations = JDrucker.getXsqlDeclaration();
+
+                JDrucker.initializeTable(xsqlDeclarations, databaseSession);
+
                 SpringApplication.exit(applicationContext, this);
             }
         }
@@ -38,13 +47,5 @@ public class MigrationRunner implements CommandLineRunner, ExitCodeGenerator {
     @Override
     public int getExitCode() {
         return 0;
-    }
-
-    private void initializeTables() {
-
-    }
-
-    private void migrate() {
-
     }
 }

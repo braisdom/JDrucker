@@ -26,7 +26,6 @@ public class JDrucker {
     public static final String DEFAULT_XSQL_PATH = "xsql";
 
     private static final String SCHEMA_MIGRATIONS_SQL = "xsql/schema_migrations.xsql";
-
     private static final Map<String, XSQLDeclaration> xsqlDeclarationCache = new HashMap<>();
     private static final int DEFAULT_THREAD_COUNT = 50;
 
@@ -75,9 +74,9 @@ public class JDrucker {
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
-            throw new DatabaseSchemaException(e.getMessage(), e);
+            throw new MigrationException(e.getMessage(), e);
         } catch (InterruptedException e) {
-            throw new DatabaseSchemaException(e.getMessage(), e);
+            throw new MigrationException(e.getMessage(), e);
         } finally {
             executorService.shutdown();
             close(null, connection);
@@ -135,7 +134,7 @@ public class JDrucker {
             if (connection != null)
                 connection.close();
         } catch (SQLException ex) {
-            throw new DatabaseSchemaException(ex.getMessage(), ex);
+            throw new MigrationException(ex.getMessage(), ex);
         }
     }
 
@@ -162,8 +161,8 @@ public class JDrucker {
                     }
                 }
                 return null;
-            } catch (Exception ex) {
-                throw new DatabaseSchemaException(ex.getMessage(), ex);
+            } catch (SQLException ex) {
+                throw new MigrationException(ex.getMessage(), ex);
             } finally {
                 close(statement, null);
             }
