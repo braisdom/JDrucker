@@ -4,7 +4,6 @@ import org.braisdom.drucker.WordUtil;
 import org.braisdom.drucker.annotation.SQL;
 import org.braisdom.drucker.annotation.Table;
 import org.braisdom.drucker.xsql.XSQLContext;
-import org.braisdom.drucker.xsql.XSQLParser;
 import org.braisdom.drucker.xsql.XSQLParsingException;
 
 import java.sql.*;
@@ -50,28 +49,8 @@ public class DefaultDatabaseSession implements DatabaseSession {
         Connection connection = null;
         ResultSet resultSet = null;
         Statement statement = null;
-        try {
-            Table table = tableClass.getAnnotation(Table.class);
-            String tableName = getTableName(table, tableClass);
-            String fileName = getXsqlFileName(sql, table, tableClass);
 
-            XSQLContext xsqlContext = createXSqlContext(tableName, sqlParameters);
-            String sqlStatement = XSQLParser.parse(fileName, sql.id(), tableClass, xsqlContext.toFreemarkContext());
-
-            connection = databaseConnectionFactory.getConnection();
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(sqlStatement);
-            // The resultSet is closed while the empty resultSet appeared
-            if(resultSet.isClosed())
-                return null;
-
-            TableMetaData tableMetaData = getTableMetaData(tableClass, connection.getMetaData(),
-                    resultSet.getMetaData());
-
-            return tableRowFactory.createTableRow(tableRowClass, tableMetaData, resultSet);
-        } finally {
-            close(statement, resultSet, connection);
-        }
+        return null;
     }
 
     @Override
