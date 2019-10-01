@@ -8,8 +8,6 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.braisdom.drucker.WordUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
