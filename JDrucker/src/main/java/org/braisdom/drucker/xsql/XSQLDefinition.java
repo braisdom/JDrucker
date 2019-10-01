@@ -149,6 +149,12 @@ public class XSQLDefinition extends XSQLBaseListener {
             return sqlStatements;
         }
 
+        public String getFirstSqlStatement() {
+            if(sqlStatements.size() > 0)
+                return sqlStatements.get(0);
+            return null;
+        }
+
         public void addSqlStatement(String sqlStatements) {
             this.sqlStatements.add(sqlStatements);
         }
