@@ -4,12 +4,17 @@ import antlr4.XSQLBaseListener;
 import antlr4.XSQLLexer;
 import antlr4.XSQLParser;
 import antlr4.XSQLParser.*;
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.braisdom.drucker.WordUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.*;
 
 public class XSQLDefinition extends XSQLBaseListener {
@@ -53,10 +58,10 @@ public class XSQLDefinition extends XSQLBaseListener {
 
         public Sql getSqlStatement(String dialect, String sqlId) {
             Map<String, Sql> tempDialectSqlMap = globalDialectSqlMap.get(dialect);
-            if(tempDialectSqlMap == null)
+            if (tempDialectSqlMap == null)
                 tempDialectSqlMap = dialectSqlMap.get(dialect);
 
-            if(tempDialectSqlMap == null)
+            if (tempDialectSqlMap == null)
                 throw new IllegalArgumentException("Cannot find sql statement with dialect: " + dialect);
             return tempDialectSqlMap.get(sqlId);
         }
@@ -140,19 +145,50 @@ public class XSQLDefinition extends XSQLBaseListener {
         public void setDialect(String dialect) {
             this.dialect = dialect;
         }
+
+        /**
+         * Returns the first sql statement.
+         *
+         * @return sql statement
+         */
+        public String getSqlStatement() {
+            if (getSqlStatements().size() > 0)
+                return getSqlStatements().get(0);
+            throw new XSQLException("Cannot find sql statement of " + id);
+        }
+
+        public String getSqlStatement(String... parameterPair) {
+            Objects.requireNonNull(parameterPair, "The parameterPair cannot be null");
+
+            Map<String, String> templateDataModel = new HashMap<>();
+            StringWriter templateOutput = new StringWriter();
+
+            try {
+                Template template = templateConfiguration.getTemplate(id, "UTF-8");
+
+                for (int i = 0; i < parameterPair.length; i++) {
+                    if ((i % 2 == 0) && i < (parameterPair.length - 1)) {
+                        templateDataModel.put(parameterPair[i], parameterPair[i + i]);
+                    }
+                }
+
+                template.process(templateDataModel, templateOutput);
+            } catch (TemplateException ex) {
+                throw new XSQLException(ex.getMessage(), ex);
+            } catch (IOException ex) {
+                throw new XSQLException(ex.getMessage(), ex);
+            }
+
+            return templateOutput.toString();
+        }
     }
 
     public static class SqlStatementContainer {
+
         private List<String> sqlStatements = new ArrayList<>();
 
         public List<String> getSqlStatements() {
             return sqlStatements;
-        }
-
-        public String getFirstSqlStatement() {
-            if(sqlStatements.size() > 0)
-                return sqlStatements.get(0);
-            return null;
         }
 
         public void addSqlStatement(String sqlStatements) {
@@ -166,6 +202,13 @@ public class XSQLDefinition extends XSQLBaseListener {
                                 int charPositionInLine, String msg, RecognitionException e) {
             throw new XSQLSyntaxError("line " + line + ":" + charPositionInLine + " " + msg.trim());
         }
+    }
+
+    private static Class SQL_FILE_LOADER_CLASS = XSQLDefinition.class;
+    private static Configuration templateConfiguration = new Configuration();
+
+    static {
+        templateConfiguration.setTemplateLoader(new ClassTemplateLoader(SQL_FILE_LOADER_CLASS, ""));
     }
 
     private XSQLDeclaration xsqlDeclaration;
@@ -215,12 +258,17 @@ public class XSQLDefinition extends XSQLBaseListener {
         for (SqlDeclContext sqlDeclContext : sqlDeclContexts) {
             Sql sql = new Sql();
             List<TerminalNode> rawSqls = sqlDeclContext.sqlBlock().SQL();
-            if(sqlDeclContext.dialectOption() != null)
+            if (sqlDeclContext.dialectOption() != null)
                 sql.setDialect(sqlDeclContext.dialectOption().getText());
             for (TerminalNode rawSql : rawSqls)
                 sql.addSqlStatement(rawSql.getText());
             xsqlDeclaration.addSqlStatement(sql);
         }
+    }
+
+
+    public static void setSqlFileLoaderClass(Class<?> clazz) {
+        templateConfiguration.setTemplateLoader(new ClassTemplateLoader(SQL_FILE_LOADER_CLASS, ""));
     }
 
     public static XSQLDeclaration parse(String fileName) throws IOException {
