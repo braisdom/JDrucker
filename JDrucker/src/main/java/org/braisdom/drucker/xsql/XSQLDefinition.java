@@ -4,17 +4,13 @@ import antlr4.XSQLBaseListener;
 import antlr4.XSQLLexer;
 import antlr4.XSQLParser;
 import antlr4.XSQLParser.*;
-import freemarker.cache.ClassTemplateLoader;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.apache.commons.text.StringSubstitutor;
 import org.braisdom.drucker.WordUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.util.*;
 
 public class XSQLDefinition extends XSQLBaseListener {
@@ -160,26 +156,15 @@ public class XSQLDefinition extends XSQLBaseListener {
         public String getSqlStatement(String... parameterPair) {
             Objects.requireNonNull(parameterPair, "The parameterPair cannot be null");
 
-            Map<String, String> templateDataModel = new HashMap<>();
-            StringWriter templateOutput = new StringWriter();
+            Map valuesMap = new HashMap<>();
 
-            try {
-                Template template = templateConfiguration.getTemplate(id, "UTF-8");
-
-                for (int i = 0; i < parameterPair.length; i++) {
-                    if ((i % 2 == 0) && i < (parameterPair.length - 1)) {
-                        templateDataModel.put(parameterPair[i], parameterPair[i + i]);
-                    }
+            for (int i = 0; i < parameterPair.length; i++) {
+                if ((i % 2 == 0) && i < (parameterPair.length - 1)) {
+                    valuesMap.put(parameterPair[i], parameterPair[i + 1]);
                 }
-
-                template.process(templateDataModel, templateOutput);
-            } catch (TemplateException ex) {
-                throw new XSQLException(ex.getMessage(), ex);
-            } catch (IOException ex) {
-                throw new XSQLException(ex.getMessage(), ex);
             }
 
-            return templateOutput.toString();
+            return new StringSubstitutor(valuesMap).replace(getSqlStatement());
         }
     }
 
@@ -202,13 +187,6 @@ public class XSQLDefinition extends XSQLBaseListener {
                                 int charPositionInLine, String msg, RecognitionException e) {
             throw new XSQLSyntaxError("line " + line + ":" + charPositionInLine + " " + msg.trim());
         }
-    }
-
-    private static Class SQL_FILE_LOADER_CLASS = XSQLDefinition.class;
-    private static Configuration templateConfiguration = new Configuration();
-
-    static {
-        templateConfiguration.setTemplateLoader(new ClassTemplateLoader(SQL_FILE_LOADER_CLASS, ""));
     }
 
     private XSQLDeclaration xsqlDeclaration;
@@ -259,7 +237,7 @@ public class XSQLDefinition extends XSQLBaseListener {
             Sql sql = new Sql();
             sql.setId(sqlDeclContext.ID().getText());
 
-            if(sqlDeclContext.dialectOption() != null)
+            if (sqlDeclContext.dialectOption() != null)
                 sql.setDialect(sqlDeclContext.dialectOption().getText());
 
             List<TerminalNode> rawSqls = sqlDeclContext.sqlBlock().SQL();
@@ -269,11 +247,6 @@ public class XSQLDefinition extends XSQLBaseListener {
                 sql.addSqlStatement(rawSql.getText());
             xsqlDeclaration.addSqlStatement(sql);
         }
-    }
-
-
-    public static void setSqlFileLoaderClass(Class<?> clazz) {
-        templateConfiguration.setTemplateLoader(new ClassTemplateLoader(SQL_FILE_LOADER_CLASS, ""));
     }
 
     public static XSQLDeclaration parse(String fileName) throws IOException {

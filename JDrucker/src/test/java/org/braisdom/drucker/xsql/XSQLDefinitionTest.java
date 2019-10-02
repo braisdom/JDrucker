@@ -80,10 +80,20 @@ public class XSQLDefinitionTest {
     @Test
     public void testGetSqlStatement() throws IOException {
         String sqlId = "query_users";
+        String sqlId2 = "query_users2";
 
         XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse("users.xsql", XSQLDefinitionTest.class.getClassLoader());
         XSQLDefinition.Sql sql = xsqlDeclaration.getSqlStatement(sqlId);
+        XSQLDefinition.Sql sql2 = xsqlDeclaration.getSqlStatement(sqlId2);
+        XSQLDefinition.Sql mysqlSql = xsqlDeclaration.getSqlStatement("mysql", sqlId);
+
         Assert.assertNotNull(sql);
+        Assert.assertNotNull(sql2);
+        Assert.assertNotNull(mysqlSql);
         Assert.assertNotNull(sql.getSqlStatement());
+
+        String formattedSql = sql2.getSqlStatement("begin_at", "2019-05-09 00:00:00", "end_at", "2019-10-09 23:59:59");
+
+        Assert.assertNotNull(formattedSql);
     }
 }
