@@ -3,28 +3,19 @@
 dialect: mysql;
 
 initialize users {
-    CREATE TABLE `users` (
-        `id` INT NOT NULL,
-        `gender` VARCHAR(50) NOT NULL,
-        `created_at` DATETIME NOT NULL,
-        `updated_at` DATETIME NOT NULL
-    ) ENGINE = InnoDB;
 }
 
 migrations {
-    # All a new column 'name' for users
-    version 0.1 {
-        ALTER TABLE `users` ADD COLUMN `name`;
-    }
 }
 
 # Find users by created_at range.
-sql query_users {
+mysql sql query_users {
     SELECT * FROM users
         WHERE `created_at` BETWEEN '2019-05-09 00:00:00' AND '2019-10-09 23:59:59';
 }
 
-# Update name 'hello' for all users.
-sql update_user {
-    UPDATE users SET name = 'hello';
+# Find users by dynamic date range.
+sql query_users2 {
+    SELECT * FROM users
+        WHERE `created_at` BETWEEN '${ begin_at }' AND '${ end_at }';
 }

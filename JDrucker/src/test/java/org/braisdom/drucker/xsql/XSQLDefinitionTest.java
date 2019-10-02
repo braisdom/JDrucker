@@ -76,4 +76,14 @@ public class XSQLDefinitionTest {
         Assert.assertTrue(xsqlDeclaration.getSqlStatements().size() == 1);
         Assert.assertTrue(xsqlDeclaration.getSqlStatements().get(0).getSqlStatements().size() == 1);
     }
+
+    @Test
+    public void testGetSqlStatement() throws IOException {
+        String sqlId = "query_users";
+
+        XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse("users.xsql", XSQLDefinitionTest.class.getClassLoader());
+        XSQLDefinition.Sql sql = xsqlDeclaration.getSqlStatement(sqlId);
+        Assert.assertNotNull(sql);
+        Assert.assertNotNull(sql.getSqlStatement());
+    }
 }

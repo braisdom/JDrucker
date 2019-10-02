@@ -257,6 +257,11 @@ public class XSQLDefinition extends XSQLBaseListener {
 
         for (SqlDeclContext sqlDeclContext : sqlDeclContexts) {
             Sql sql = new Sql();
+            sql.setId(sqlDeclContext.ID().getText());
+
+            if(sqlDeclContext.dialectOption() != null)
+                sql.setDialect(sqlDeclContext.dialectOption().getText());
+
             List<TerminalNode> rawSqls = sqlDeclContext.sqlBlock().SQL();
             if (sqlDeclContext.dialectOption() != null)
                 sql.setDialect(sqlDeclContext.dialectOption().getText());

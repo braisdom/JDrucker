@@ -15,6 +15,7 @@ public class JDruckerTest {
         String xsqlFileName1 = "xsql/admin/users.xsql";
         String xsqlFileName2 = "xsql/management/users.xsql";
         String xsqlFileName3 = "xsql/management/admin/users.xsql";
+
         JDrucker.loadXsqlFile(xsqlPath);
 
         XSQLDefinition.XSQLDeclaration xsqlDeclaration = JDrucker.getXSQLDeclaration(xsqlFileName);
@@ -26,17 +27,6 @@ public class JDruckerTest {
         Assert.assertNotNull(xsqlDeclaration1);
         Assert.assertNotNull(xsqlDeclaration2);
         Assert.assertNotNull(xsqlDeclaration3);
-
-        int c = 1;// ...0001=2^0
-        int r = 2;// ...0010=2^1
-        int u = 4;// ...0100=2^3
-        int d = 8;// ...1000=2^4
-
-        int userb = c | d | r;
-
-        System.out.println(userb);
-
-        System.out.println(userb == (c | userb));
     }
 
 }

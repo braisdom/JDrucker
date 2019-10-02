@@ -9,11 +9,11 @@ xsqlDecl: dialectDecl? initDecl? migrationsDecl? sqlDecl* EOF;
 dialectDecl: DIALECT dialectOption ';';
 initDecl: 'initialize' tableName sqlBlock;
 migrationsDecl: 'migrations' '{' migrationsVersionDecl* '}';
-sqlDecl: dialectOption? 'sql' ID+ sqlBlock;
+sqlDecl: dialectOption? 'sql' ID sqlBlock;
 migrationsVersionDecl: 'version' FLOAT sqlBlock;
 dialectOption: 'mysql' | 'oracle' | 'sqlite' | 'postgresql' | 'mssql';
 sqlBlock: '{' SQL* '}';
-tableName: ID+;
+tableName: ID;
 
 SQL: SQL_BEGINNING_KEYWORDS .*? ';';
 SQL_BEGINNING_KEYWORDS: 'CREATE' | 'DROP' | 'SHOW' | 'USE' | 'DESCRIBE' | 'SELECT' | 'UPDATE' | 'DELETE' | 'ALTER' | 'INSERT'
