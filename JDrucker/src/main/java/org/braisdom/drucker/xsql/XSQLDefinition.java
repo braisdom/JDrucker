@@ -146,11 +146,22 @@ public class XSQLDefinition extends XSQLBaseListener {
          * Returns the first sql statement.
          *
          * @return sql statement
+         * @throws XSQLException it thrown when the container of sql statement is empty
          */
         public String getSqlStatement() {
             if (getSqlStatements().size() > 0)
                 return getSqlStatements().get(0);
             throw new XSQLException("Cannot find sql statement of " + id);
+        }
+
+        /**
+         * Returns the sql statement with sql index.
+         *
+         * @param sqlIndex sql index
+         * @return sql statement
+         */
+        public String getSqlStatement(int sqlIndex) {
+            return getSqlStatements().get(sqlIndex);
         }
 
         public String getSqlStatement(String... parameterPair) {
