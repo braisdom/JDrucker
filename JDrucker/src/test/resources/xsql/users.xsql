@@ -17,5 +17,5 @@ mysql sql query_users {
 # Find users by dynamic date range.
 sql query_users2 {
     SELECT * FROM users
-        WHERE `created_at` BETWEEN '$ {begin_at}' AND '$ {end_at}';
+        WHERE `created_at` BETWEEN '${begin_at}' AND '${end_at}';
 }

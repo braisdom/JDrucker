@@ -164,7 +164,7 @@ public class XSQLDefinition extends XSQLBaseListener {
                 }
             }
 
-            return new StringSubstitutor(valuesMap).replace(getSqlStatement());
+            return StringSubstitutor.replace(getSqlStatement(), valuesMap);
         }
     }
 
