@@ -66,13 +66,13 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:braisdom/TemplatedExcel.git</connection>
-        <developerConnection>scm:git:git@github.com:braisdom/TemplatedExcel.git</developerConnection>
-        <url>https://github.com/braisdom/TemplatedExcel</url>
+        <connection>scm:git:git@github.com:braisdom/JDrucker.git</connection>
+        <developerConnection>scm:git:git@github.com:braisdom/JDrucker.git</developerConnection>
+        <url>https://github.com/braisdom/JDrucker</url>
     </scm>
 
     <issueManagement>
-        <url>https://github.com/braisdom/TemplatedExcel/issues</url>
+        <url>https://github.com/braisdom/JDrucker/issues</url>
     </issueManagement>
 
     <organization>
@@ -156,12 +156,12 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>2.4</version>
+                    <version>3.0.1</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
                             <goals>
-                                <goal>jar-no-fork</goal>
+                                <goal>jar</goal>
                             </goals>
                         </execution>
                     </executions>
@@ -172,6 +172,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.20</version>
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -233,12 +234,12 @@
                         <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-source-plugin</artifactId>
-                            <version>2.2.1</version>
+                            <version>3.0.1</version>
                             <executions>
                                 <execution>
-                                    <phase>package</phase>
+                                    <id>attach-sources</id>
                                     <goals>
-                                        <goal>jar-no-fork</goal>
+                                        <goal>jar</goal>
                                     </goals>
                                 </execution>
                             </executions>
@@ -257,7 +258,6 @@
                                         <skip>true</skip>
                                         <encoding>UTF-8</encoding>
                                         <charset>UTF-8</charset>
-                                        <additionalparam>-Xdoclint:none</additionalparam>
                                         <additionalparam>-Xdoclint:none</additionalparam>
                                     </configuration>
                                 </execution>
@@ -284,7 +284,7 @@
 
     <distributionManagement>
         <repository>
-            <id>braisdom</id>
+            <id>release</id>
             <name>snapshots repository</name>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>

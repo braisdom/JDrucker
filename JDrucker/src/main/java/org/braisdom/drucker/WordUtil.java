@@ -545,10 +545,10 @@ public class WordUtil {
      *
      * <pre>
      * Examples:
-     *   camelize("hello")               ==> "Hello"
-     *   camelize("hello world")         ==> "Hello world"
-     *   camelize("active_record")       ==> "ActiveRecord"
-     *   camelize("active_record", true) ==> "activeRecord"
+     *   camelize("hello")               "Hello"
+     *   camelize("hello world")         "Hello world"
+     *   camelize("active_record")       "ActiveRecord"
+     *   camelize("active_record", true) "activeRecord"
      * </pre>
      *
      * @param word                      the word to be converted to camelized form
@@ -597,10 +597,10 @@ public class WordUtil {
      *
      * <pre>
      * Examples:
-     *   underscore("Hello world")  ==> "hello world"
-     *   underscore("ActiveRecord") ==> "active_record"
-     *   underscore("The RedCross") ==> "the red_cross"
-     *   underscore("ABCD")         ==> "abcd"
+     *   underscore("Hello world")    "hello world"
+     *   underscore("ActiveRecord")   "active_record"
+     *   underscore("The RedCross")   "the red_cross"
+     *   underscore("ABCD")           "abcd"
      * </pre>
      *
      * @param phase             the original string
@@ -655,7 +655,7 @@ public class WordUtil {
      *
      * <pre>
      * Examples:
-     *   titleize("ch 1:  Java-ActiveRecordIsFun") ==> "Ch 1:  Java Active Record Is Fun"
+     *   titleize("ch 1:  Java-ActiveRecordIsFun")   "Ch 1:  Java Active Record Is Fun"
      * </pre>
      *
      * @param phase             the original string
@@ -695,8 +695,8 @@ public class WordUtil {
      *
      * <pre>
      * Examples:
-     *   humanize("active_record") ==> "Active record"
-     *   humanize("post_id")       ==> "Post"
+     *   humanize("active_record")   "Active record"
+     *   humanize("post_id")         "Post"
      * </pre>
      *
      * @param phase             the original string
@@ -715,8 +715,8 @@ public class WordUtil {
      *
      * <pre>
      * Examples:
-     *   tableize("Person")   ==> "people"
-     *   tableize("LineItem") ==> "line_items"
+     *   tableize("Person")     "people"
+     *   tableize("LineItem")   "line_items"
      * </pre>
      *
      * @param modelClassName
@@ -732,8 +732,8 @@ public class WordUtil {
      *
      * <pre>
      * Examples:
-     *   classify("people")   ==> "Person"
-     *   classify("line_items") ==> "LineItem"
+     *   classify("people")     "Person"
+     *   classify("line_items")   "LineItem"
      * </pre>
      *
      * @param tableName java class tableName of the entityClass
@@ -762,8 +762,8 @@ public class WordUtil {
      *
      * <pre>
      * Examples:
-     *   ordinalize(100)  ==> "100th"
-     *   ordinalize(1003) ==> "1003rd"
+     *   ordinalize(100)    "100th"
+     *   ordinalize(1003)   "1003rd"
      * </pre>
      *
      * @param number            the number
