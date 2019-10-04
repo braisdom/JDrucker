@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.braisdom</groupId>
     <artifactId>JDrucker</artifactId>
-    <version>1.0.1</version>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
     <url>http://www.joowing.com</url>
     <description>Do what you do best, and outsource the rest.Make the Java do business logic only,
