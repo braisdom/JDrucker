@@ -1,0 +1,30 @@
+# Create migration changes for various databases.
+
+# For MySQL
+mysql sql create_schema_migrations_table {
+
+}
+
+# For SQLite
+sqlite sql create_schema_migrations_table {
+    CREATE TABLE IF NOT EXISTS schema_migrations (
+         id INTEGER PRIMARY KEY,
+         table_name TEXT NOT NULL,
+         version REAL NOT NULL,
+         created_at text NOT NULL
+    );
+}
+
+# For Oracle
+oracle sql create_schema_migrations_table {
+    CREATE TABLE schema_migrations (
+
+    );
+}
+
+# For PostgreSQL
+postgresql sql create_schema_migrations_table {
+    CREATE TABLE schema_migrations (
+
+    );
+}

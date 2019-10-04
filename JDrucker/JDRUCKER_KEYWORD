@@ -1,0 +1,19 @@
+$
+${}
+*
++
+-
+/
+dialect:
+initialize
+migrations
+mysql
+new table
+oracle
+postgresql
+sql
+sqlite
+version
+{
+{}
+}
