@@ -6,4 +6,4 @@ The 'xsql' file is a grammatical structure. Let SQL statements, like Java code, 
 
 `Example In IntelliJ IDEA:`
 
-![](https://raw.githubusercontent.com/braisdom/JDrucker/master/JDrucker/images/1.png)<!-- .element height="75%" -->
+![](https://raw.githubusercontent.com/braisdom/JDrucker/master/JDrucker/images/1.png)<!-- .element height="90%" -->
