@@ -8,6 +8,15 @@ The 'xsql' file is a grammatical structure. Let SQL statements, like Java code, 
 
 ![](https://raw.githubusercontent.com/braisdom/JDrucker/master/JDrucker/images/1.png)
 
+`Maven:`
+```xml
+<dependency>
+    <groupId>com.github.braisdom</groupId>
+    <artifactId>JDrucker</artifactId>
+    <version>1.2.0</version>
+</dependency>
+```
+
 `Usage:`
 ```java
 // Loading and caching all XSQL file at system beginning. The xsqlPath is resources path of application
