@@ -7,3 +7,13 @@ The 'xsql' file is a grammatical structure. Let SQL statements, like Java code, 
 `Example In IntelliJ IDEA:`
 
 ![](https://raw.githubusercontent.com/braisdom/JDrucker/master/JDrucker/images/1.png)
+
+`Usage:`
+```java
+```java
+// Loading and caching all XSQL file at system beginning. The xsqlPath is resources path of application
+JDrucker.loadXsqlFile(xsqlPath);
+// Retrieving the xsql declaration from cache, and formatting the sql statment
+XSQLDeclaration xsqlDeclaration = JDrucker.getXSQLDeclaration(xsqlFileName)
+```
+```
