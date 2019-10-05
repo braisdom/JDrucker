@@ -10,10 +10,8 @@ The 'xsql' file is a grammatical structure. Let SQL statements, like Java code, 
 
 `Usage:`
 ```java
-```java
 // Loading and caching all XSQL file at system beginning. The xsqlPath is resources path of application
 JDrucker.loadXsqlFile(xsqlPath);
 // Retrieving the xsql declaration from cache, and formatting the sql statment
 XSQLDeclaration xsqlDeclaration = JDrucker.getXSQLDeclaration(xsqlFileName)
-```
 ```
