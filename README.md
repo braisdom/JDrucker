@@ -4,3 +4,5 @@ Do what you do best, and outsource the rest. Make the Java do business logic onl
 ### XSQL
 The 'xsql' file is a grammatical structure. Let SQL statements, like Java code, has methods, comments, structures, and support dynamic splicing.
 
+Example:
+![](https://raw.githubusercontent.com/braisdom/JDrucker/master/JDrucker/images/1.png)
