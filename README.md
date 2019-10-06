@@ -24,3 +24,6 @@ JDrucker.loadXsqlFile(xsqlPath);
 // Retrieving the xsql declaration from cache, and formatting the sql statment
 XSQLDeclaration xsqlDeclaration = JDrucker.getXSQLDeclaration(xsqlFileName)
 ```
+
+### ORM with XSQL
+Coming soon
