@@ -29,15 +29,6 @@ public class JDrucker {
     private static final Map<String, XSQLDeclaration> xsqlDeclarationCache = new HashMap<>();
     private static final int DEFAULT_THREAD_COUNT = 50;
 
-    static {
-        try {
-            ClassLoader classLoader = JDrucker.class.getClassLoader();
-            cacheFile(SCHEMA_MIGRATIONS_SQL, new File(classLoader.getResource(SCHEMA_MIGRATIONS_SQL).getPath()));
-        } catch (IOException e) {
-            throw new XSQLException(e.getMessage(), e);
-        }
-    }
-
     public static <T extends TableBehavior> T getProxy(DatabaseSession databaseSession,
                                                        Class<T> tableClass,
                                                        Class<? extends TableRow> tableRowClass) {
