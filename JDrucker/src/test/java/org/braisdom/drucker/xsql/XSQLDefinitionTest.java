@@ -89,7 +89,7 @@ public class XSQLDefinitionTest {
         XSQLDeclaration xsqlDeclaration = XSQLDefinition.parse("xsql/users.xsql", XSQLDefinitionTest.class.getClassLoader());
         XSQLDefinition.Sql sql = xsqlDeclaration.getSqlStatement(sqlId);
         XSQLDefinition.Sql sql2 = xsqlDeclaration.getSqlStatement(sqlId2);
-        XSQLDefinition.Sql mysqlSql = xsqlDeclaration.getSqlStatement("mysql", sqlId);
+        XSQLDefinition.Sql mysqlSql = xsqlDeclaration.getSqlStatement(sqlId);
 
         Assert.assertNotNull(sql);
         Assert.assertNotNull(sql2);

@@ -177,6 +177,11 @@ public class XSQLDefinition extends XSQLBaseListener {
 
             return StringSubstitutor.replace(getSqlStatement(), valuesMap);
         }
+
+        public String getSqlStatement(Map<String, String> parametersMap) {
+            Objects.requireNonNull(parametersMap, "The parameterPair cannot be null");
+            return StringSubstitutor.replace(getSqlStatement(), parametersMap);
+        }
     }
 
     public static class SqlStatementContainer {
