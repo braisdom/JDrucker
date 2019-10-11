@@ -90,15 +90,5 @@ public class XSQLDefinitionTest {
         XSQLDefinition.Sql sql = xsqlDeclaration.getSqlStatement(sqlId);
         XSQLDefinition.Sql sql2 = xsqlDeclaration.getSqlStatement(sqlId2);
         XSQLDefinition.Sql mysqlSql = xsqlDeclaration.getSqlStatement(sqlId);
-
-        Assert.assertNotNull(sql);
-        Assert.assertNotNull(sql2);
-        Assert.assertNotNull(mysqlSql);
-        Assert.assertNotNull(sql.getSqlStatement());
-
-        String formattedSql = sql2.getSqlStatement("begin_at", "2019-05-09 00:00:00", "end_at", "2019-10-09 23:59:59");
-
-        Assert.assertNotNull(formattedSql);
-        Assert.assertTrue(formattedSql.indexOf("$") == -1);
     }
 }
