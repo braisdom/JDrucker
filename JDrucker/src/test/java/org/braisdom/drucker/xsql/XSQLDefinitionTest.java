@@ -16,7 +16,7 @@ public class XSQLDefinitionTest {
 
     @Test
     public void testDialectDeclSucc() throws IOException {
-        String input = "dialect: mysql;\n" +
+        String input = "-- test \n dialect: mysql;\n" +
                 "initialize users {\n" +
                 "} ";
         InputStream inputStream = new ByteArrayInputStream(input.getBytes());

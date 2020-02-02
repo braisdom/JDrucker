@@ -1,9 +1,15 @@
 # Find all objects from the table
 sql find_all {
-    SELECT * FROM ${ table_name }
+    SELECT * FROM ${ table_name };
 }
 
 # Find objects by id
 sql find_by_id {
-    SELECT * FROM ${ table_name } WHERE id = ${ id }
+    SELECT members.member_no, members.mobile, members.name, SUM(fct_sales.amount), SUM(fct_sales.quantity)
+    WITH retailer(id = 1 | org_code = 'test' | ALL)
+    FROM members(last_shopping_at > '2019-10-01' AND register_at > '2019-10-01' AND ...),
+         fct_sales(sales_at BETWEEN '2019-10-01' AND '2019-10-20' AND ...),
+         communication_task(created_at BETWEEN '2019-10-01' AND '2019-10-20' AND ...),
+    WHERE (fct_sales.product_code IN ('11111', '222222') OR fct_sales.brand_code IN ('22222', '333333'))
+    GROUP BY members.member_no, members.mobile, members.name HAVING SUM(fct_sales.amount) > 1000
 }

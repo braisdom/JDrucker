@@ -127,11 +127,6 @@ public class XSQLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof XSQLListener ) ((XSQLListener)listener).exitXsqlDecl(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XSQLVisitor ) return ((XSQLVisitor<? extends T>)visitor).visitXsqlDecl(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final XsqlDeclContext xsqlDecl() throws RecognitionException {
@@ -217,11 +212,6 @@ public class XSQLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof XSQLListener ) ((XSQLListener)listener).exitDialectDecl(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XSQLVisitor ) return ((XSQLVisitor<? extends T>)visitor).visitDialectDecl(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final DialectDeclContext dialectDecl() throws RecognitionException {
@@ -268,11 +258,6 @@ public class XSQLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof XSQLListener ) ((XSQLListener)listener).exitInitDecl(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XSQLVisitor ) return ((XSQLVisitor<? extends T>)visitor).visitInitDecl(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final InitDeclContext initDecl() throws RecognitionException {
@@ -318,11 +303,6 @@ public class XSQLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof XSQLListener ) ((XSQLListener)listener).exitMigrationsDecl(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XSQLVisitor ) return ((XSQLVisitor<? extends T>)visitor).visitMigrationsDecl(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -386,11 +366,6 @@ public class XSQLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof XSQLListener ) ((XSQLListener)listener).exitSqlDecl(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XSQLVisitor ) return ((XSQLVisitor<? extends T>)visitor).visitSqlDecl(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final SqlDeclContext sqlDecl() throws RecognitionException {
@@ -446,11 +421,6 @@ public class XSQLParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof XSQLListener ) ((XSQLListener)listener).exitMigrationsVersionDecl(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XSQLVisitor ) return ((XSQLVisitor<? extends T>)visitor).visitMigrationsVersionDecl(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final MigrationsVersionDeclContext migrationsVersionDecl() throws RecognitionException {
@@ -490,11 +460,6 @@ public class XSQLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof XSQLListener ) ((XSQLListener)listener).exitDialectOption(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XSQLVisitor ) return ((XSQLVisitor<? extends T>)visitor).visitDialectOption(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -544,11 +509,6 @@ public class XSQLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof XSQLListener ) ((XSQLListener)listener).exitSqlBlock(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XSQLVisitor ) return ((XSQLVisitor<? extends T>)visitor).visitSqlBlock(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -603,11 +563,6 @@ public class XSQLParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof XSQLListener ) ((XSQLListener)listener).exitTableName(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof XSQLVisitor ) return ((XSQLVisitor<? extends T>)visitor).visitTableName(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 

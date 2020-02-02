@@ -154,30 +154,6 @@ public class XSQLDefinition extends XSQLBaseListener {
             throw new XSQLException("Cannot find sql statement of " + id);
         }
 
-        /**
-         * Returns the sql statement with sql index.
-         *
-         * @param sqlIndex sql index
-         * @return sql statement
-         */
-        public String getSqlStatement(int sqlIndex) {
-            return getSqlStatements().get(sqlIndex);
-        }
-
-        public String getSqlStatement(String... parameterPair) {
-            Objects.requireNonNull(parameterPair, "The parameterPair cannot be null");
-
-            Map valuesMap = new HashMap<>();
-
-            for (int i = 0; i < parameterPair.length; i++) {
-                if ((i % 2 == 0) && i < (parameterPair.length - 1)) {
-                    valuesMap.put(parameterPair[i], parameterPair[i + 1]);
-                }
-            }
-
-            return StringSubstitutor.replace(getSqlStatement(), valuesMap);
-        }
-
         public String getSqlStatement(Map<String, String> parametersMap) {
             Objects.requireNonNull(parametersMap, "The parameterPair cannot be null");
             return StringSubstitutor.replace(getSqlStatement(), parametersMap);
@@ -194,6 +170,41 @@ public class XSQLDefinition extends XSQLBaseListener {
 
         public void addSqlStatement(String sqlStatements) {
             this.sqlStatements.add(sqlStatements);
+        }
+
+        /**
+         * Returns the sql statement with sql index.
+         *
+         * @param sqlIndex sql index
+         * @return sql statement
+         */
+        public String getSqlStatement(int sqlIndex) {
+            return getSqlStatements().get(sqlIndex);
+        }
+
+        /**
+         * Returns the sql statement without parameters
+         *
+         * @return sql statement
+         */
+        public String getSqlStatement() {
+            if (sqlStatements.size() > 0)
+                return getSqlStatements().get(0);
+            throw new XSQLException("No sql statement:" + getClass().getName());
+        }
+
+        public String getSqlStatement(String... parameterPair) {
+            Objects.requireNonNull(parameterPair, "The parameterPair cannot be null");
+
+            Map valuesMap = new HashMap<>();
+
+            for (int i = 0; i < parameterPair.length; i++) {
+                if ((i % 2 == 0) && i < (parameterPair.length - 1)) {
+                    valuesMap.put(parameterPair[i], parameterPair[i + 1]);
+                }
+            }
+
+            return StringSubstitutor.replace(getSqlStatement(), valuesMap);
         }
     }
 

@@ -22,7 +22,7 @@ SQL_BEGINNING_KEYWORDS: 'CREATE' | 'DROP' | 'SHOW' | 'USE' | 'DESCRIBE' | 'SELEC
 ID: ('A'..'Z' | 'a'..'z' | '_') ( 'A'..'Z' | 'a'..'z' | '_' | '0'..'9')+;
 WS : (' ' |'\t' |'\n' |'\r' )+ -> skip;
 COMMENT: '/*' .*? '*/' -> skip;
-LINE_COMMENT: '#' ~[\r\n]* -> skip;
+LINE_COMMENT: '-- ' ~[\r\n]* -> skip;
 DIALECT: 'dialect:';
 INT: ('0'..'9')+;
 FLOAT: INT+ '.' INT+;
