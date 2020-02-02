@@ -1,4 +1,4 @@
-# users table definition
+-- users table definition
 
 dialect: mysql;
 
@@ -12,19 +12,19 @@ initialize users {
 }
 
 migrations {
-    # All a new column 'name' for users
+    -- All a new column 'name' for users
     version 0.1 {
         ALTER TABLE `users` ADD COLUMN `name`;
     }
 }
 
-# Find users by created_at range.
+-- Find users by created_at range.
 sql query_users {
     SELECT * FROM users
         WHERE `created_at` BETWEEN '2019-05-09 00:00:00' AND '2019-10-09 23:59:59';
 }
 
-# Update name 'hello' for all users.
+-- Update name 'hello' for all users.
 sql update_user {
     UPDATE users SET name = 'hello';
 }

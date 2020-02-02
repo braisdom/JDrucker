@@ -1,4 +1,4 @@
-# users table definition
+-- users table definition
 
 initialize users {
     CREATE TABLE `users` (
@@ -15,16 +15,16 @@ initialize users {
 
 migrations {
     version 1.0 {
-        # Do nothing.
+        -- Do nothing.
     }
 }
 
-# Find all users.
+-- Find all users.
 sql find_all_users {
     SELECT * FROM users;
 }
 
-# Find users by dynamic date range.
+-- Find users by dynamic date range.
 sql find_users {
     SELECT * FROM users WHERE `created_at` BETWEEN '${begin_at}' AND '${end_at}';
 }
