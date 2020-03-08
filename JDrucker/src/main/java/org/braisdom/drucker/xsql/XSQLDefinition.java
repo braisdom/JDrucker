@@ -209,10 +209,17 @@ public class XSQLDefinition extends XSQLBaseListener {
     }
 
     private static class XSQLErrorListener extends BaseErrorListener {
+
+        private final String fileName;
+
+        public XSQLErrorListener(String fileName) {
+            this.fileName = fileName;
+        }
+
         @Override
         public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line,
                                 int charPositionInLine, String msg, RecognitionException e) {
-            throw new XSQLSyntaxError("line " + line + ":" + charPositionInLine + " " + msg.trim());
+            throw new XSQLSyntaxError(fileName + ": line " + line + ":" + charPositionInLine + " " + msg.trim());
         }
     }
 
@@ -287,7 +294,7 @@ public class XSQLDefinition extends XSQLBaseListener {
         return parse(classLoader.getResourceAsStream(fileName));
     }
 
-    public static XSQLDeclaration parse(InputStream inputStream) throws IOException {
+    public static XSQLDeclaration parse(String fileName, InputStream inputStream) throws IOException {
         Objects.requireNonNull(inputStream, "The inputStream cannot be null");
 
         CharStream charStream = CharStreams.fromStream(inputStream);
@@ -296,9 +303,13 @@ public class XSQLDefinition extends XSQLBaseListener {
         XSQLParser xsqlParser = new XSQLParser(commonStream);
         XSQLDefinition xsqlDefinition = new XSQLDefinition();
 
-        xsqlParser.addErrorListener(new XSQLErrorListener());
+        xsqlParser.addErrorListener(new XSQLErrorListener(fileName));
         xsqlParser.xsqlDecl().enterRule(xsqlDefinition);
 
         return xsqlDefinition.xsqlDeclaration;
+    }
+
+    public static XSQLDeclaration parse(InputStream inputStream) throws IOException {
+        return parse("Unknown", inputStream);
     }
 }
