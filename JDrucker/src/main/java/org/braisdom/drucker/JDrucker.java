@@ -115,7 +115,7 @@ public class JDrucker {
     private static void cacheFile(String cacheName, File xsqlFile) throws IOException {
         if (xsqlDeclarationCache.get(cacheName) != null)
             throw new XSQLException("Duplicated xslq file: " + cacheName);
-        xsqlDeclarationCache.put(cacheName, XSQLDefinition.parse(new FileInputStream(xsqlFile)));
+        xsqlDeclarationCache.put(cacheName, XSQLDefinition.parse(xsqlFile.getName(), new FileInputStream(xsqlFile)));
     }
 
     private static void close(Statement statement, Connection connection) {
