@@ -79,15 +79,19 @@ public class JDrucker {
     }
 
     public static void loadXsqlFile(String xsqlFilePath) throws IOException {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null)
-            classLoader = JDrucker.class.getClassLoader();
-        URL url = classLoader.getResource(xsqlFilePath);
         List<String> cacheNameSegments = new ArrayList<>();
-
         cacheNameSegments.add(xsqlFilePath);
 
-        traverseXsqlFiles(cacheNameSegments, new File(url.getPath()).listFiles());
+        if(xsqlFilePath.startsWith("classpath:")) {
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            if (classLoader == null)
+                classLoader = JDrucker.class.getClassLoader();
+            URL url = classLoader.getResource(xsqlFilePath);
+
+            traverseXsqlFiles(cacheNameSegments, new File(url.getPath()).listFiles());
+        }else {
+            traverseXsqlFiles(cacheNameSegments, new File(xsqlFilePath).listFiles());
+        }
     }
 
     public static Collection<XSQLDeclaration> getXsqlDeclaration() {
