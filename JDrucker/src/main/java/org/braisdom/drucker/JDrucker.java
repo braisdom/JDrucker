@@ -83,6 +83,7 @@ public class JDrucker {
         cacheNameSegments.add(xsqlFilePath);
 
         if(xsqlFilePath.startsWith("classpath:")) {
+            xsqlFilePath = xsqlFilePath.split(":")[1];
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             if (classLoader == null)
                 classLoader = JDrucker.class.getClassLoader();
