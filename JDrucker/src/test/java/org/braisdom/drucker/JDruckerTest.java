@@ -10,11 +10,11 @@ public class JDruckerTest {
 
     @Test
     public void testLoadXsqlFile() throws IOException {
-        String xsqlPath = "xsql";
-        String xsqlFileName = "xsql/users.xsql";
-        String xsqlFileName1 = "xsql/admin/users.xsql";
-        String xsqlFileName2 = "xsql/management/users.xsql";
-        String xsqlFileName3 = "xsql/management/admin/users.xsql";
+        String xsqlPath = "classpath:xsql";
+        String xsqlFileName = "classpath:xsql/users.xsql";
+        String xsqlFileName1 = "classpath:xsql/admin/users.xsql";
+        String xsqlFileName2 = "classpath:xsql/management/users.xsql";
+        String xsqlFileName3 = "classpath:xsql/management/admin/users.xsql";
 
         JDrucker.loadXsqlFile(xsqlPath);
 
